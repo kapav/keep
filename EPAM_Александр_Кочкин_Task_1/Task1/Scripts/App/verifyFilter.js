@@ -2,9 +2,9 @@
 	var controlCharMaxNum = 32,
 		firefoxFuncBtnNum = 0,
         filterMask = /[a-zA-Zа-яА-ЯёЁ0-9 _,;:\\\/\-\.\+\*\(\)!@#\$%&={}\[\]\"\'\?<>№]/,
-		keepFilter = document.getElementById("storeFilter");
+		filterName = document.forms.filterAndAddForm.filterName;
 
-    keepFilter.value = "";
+    filterName.value = "";
 
     function showError(container, errorMessage) { // Отобразить ошибку.
         var msgElem = document.createElement("span");
@@ -24,7 +24,7 @@
             code = e.charCode || e.keyCode,
             filterSymbol;
 
-        resetError(keepFilter.parentElement.parentElement.parentElement);
+        resetError(filterName.parentElement.parentElement.parentElement);
         if (code < controlCharMaxNum ||
 			e.charCode === firefoxFuncBtnNum ||
 			e.ctrlKey || e.altKey) {
@@ -34,9 +34,9 @@
         filterSymbol = String.fromCharCode(code);
 
         if (!filterMask.test(filterSymbol)) {
-            showError(keepFilter.parentElement.parentElement.parentElement, "* Введите буквы, цифры или спецсимволы");
-        } else if (keepFilter.value.length >= 15) {
-            showError(keepFilter.parentElement.parentElement.parentElement, "* Фильтр должен быть от 1 до 15 символов");
+            showError(filterName.parentElement.parentElement.parentElement, "* Введите буквы, цифры или спецсимволы");
+        } else if (filterName.value.length >= 15) {
+            showError(filterName.parentElement.parentElement.parentElement, "* Фильтр должен быть от 1 до 15 символов");
         } else {
             return;
         }
@@ -44,18 +44,18 @@
     }
 
     function filterCheck() { // Проверка фильтра имени товара для поиска.
-        var filterText = keepFilter.value.trim();
-        resetError(keepFilter.parentElement.parentElement.parentElement);
-        keepFilter.value = filterText;
+        var filterText = filterName.value.trim();
+        resetError(filterName.parentElement.parentElement.parentElement);
+        filterName.value = filterText;
     }
 
     function filterDeny(e) { // Запрещение копирования из буфера обмена.
-        resetError(keepFilter.parentElement.parentElement.parentElement);
-        showError(keepFilter.parentElement.parentElement.parentElement, "* Нельзя копировать из буфера обмена");
+        resetError(filterName.parentElement.parentElement.parentElement);
+        showError(filterName.parentElement.parentElement.parentElement, "* Нельзя копировать из буфера обмена");
         e.preventDefault();
     }
 
-    keepFilter.addEventListener("keypress", filterFormat);
-    keepFilter.addEventListener("paste", filterDeny);
-    keepFilter.addEventListener("blur", filterCheck);
+    filterName.addEventListener("keypress", filterFormat);
+    filterName.addEventListener("paste", filterDeny);
+    filterName.addEventListener("blur", filterCheck);
 })();

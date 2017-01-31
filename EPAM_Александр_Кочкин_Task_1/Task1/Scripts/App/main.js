@@ -13,24 +13,18 @@
         prodIndex = -1,
         sortingName = false,
         sortingPrice = false,
-		dbBtnInModal = document.getElementById("addInModal"),
-		dbBtnAboveModal = document.getElementById("searchAboveModal"),
-		dbToggleName = document.getElementById("toggleName"),
-		dbTogglePrice = document.getElementById("togglePrice"),
-        dbName = document.getElementById("storeName"),
-        dbCount = document.getElementById("storeCount"),
-        dbPrice = document.getElementById("storePrice"),
-        dbPropriety = document.getElementById("storePropriety"),
+		dbBtnAboveModal = document.forms.filterAndAddForm.filterAboveModal,
+		dbBtnInModal = document.forms.filterAndAddForm.changeInModal,
+		toggleName = document.forms.toggleNameForm.toggleName,
+		togglePrice = document.forms.togglePriceForm.togglePrice,
+        storeForm = document.forms.storeForm,
         tbodyDb = document.getElementById("tbodyElem");
 
-    //for (var i = 0; i < do)
-
     window.addEventListener("load", displayDb);
-    dbBtnInModal.addEventListener("click", addPlace);
     dbBtnAboveModal.addEventListener("click", searchDb);
-    dbToggleName.addEventListener("click", sortingToggleName);
-    dbTogglePrice.addEventListener("click", sortingTogglePrice);
-	tbodyDb.addEventListener("click", tbodyClick);
+    toggleName.addEventListener("click", sortingToggleName);
+    togglePrice.addEventListener("click", sortingTogglePrice);
+	document.addEventListener("click", tbodyClick);
 
     function drawDb(prodRow) { // Отрисовывает сведения о товарах.
         tbodyDb.innerHTML = "";
@@ -43,7 +37,7 @@
 	}
 	
 	function searchDb() { // Фильтрация по имени товара.
-	    var dbFilter = document.getElementById("storeFilter"),
+	    var dbFilter = document.getElementById("filterName"),
 	        dbFilterUpperCase = dbFilter.value.toUpperCase();
         prodShow = prodStorage.filter(function (prod) {
             return prod.name.slice(0, dbFilter.value.length).toUpperCase() === dbFilterUpperCase;
@@ -52,7 +46,7 @@
     }
 
     function sortingToggleName() { // Меняет направление сортировки по имени.
-        var glyphiconToggleName = dbToggleName.firstElementChild;
+        var glyphiconToggleName = toggleName.firstElementChild;
         if (!prodShow) prodShow = prodStorage;
 		prodShow.sort(function (prodA, prodB) {
             if (prodA.name.toUpperCase() < prodB.name.toUpperCase()) return -1;
@@ -69,7 +63,7 @@
     }
 
     function sortingTogglePrice() { // Меняет направление сортировки по цене.
-        var glyphiconTogglePrice = dbTogglePrice.firstElementChild;
+        var glyphiconTogglePrice = togglePrice.firstElementChild;
         if (!prodShow) prodShow = prodStorage;
         prodShow.sort(function (prodA, prodB) {
             if (prodA.price < prodB.price) return -1;
@@ -87,28 +81,34 @@
 
     function displayBlock(prod) { // Отрисовывает элемент tr - строку перечня.
         var innerBlock = document.getElementById("rowBlock").innerHTML,
-            trElemBlock = document.createElement("tr");
+            trElemBlock = document.createElement("tr"),
+            rowName = "rowName" + prod.id,
+            rowPrice = "rowPrice" + prod.id,
+            rowAction = "rowAction" + prod.id;
         trElemBlock.innerHTML = innerBlock;
-		
-        trElemBlock.getElementsByClassName("prodName")[0].innerHTML = prod.name;
-        trElemBlock.getElementsByClassName("prodCount")[0].innerHTML = prod.count;
-        trElemBlock.getElementsByClassName("prodPrice")[0].innerHTML = formatterUsdCur.format(prod.price);
-        trElemBlock.getElementsByClassName("#prodEditStartModal")[0].setAttribute("data-target", "#editStartModal" + prod.id);
-        trElemBlock.getElementsByClassName("#prodEditStartModal")[0].id = "editAboveModal" + prod.id;
-        trElemBlock.getElementsByClassName("prodEditStartModal")[0].id = "editStartModal" + prod.id;
-        trElemBlock.getElementsByClassName("prodEditNameFor")[0].setAttribute("for", "editName" + prod.id);
-        trElemBlock.getElementsByClassName("prodEditNameId")[0].id = "editName" + prod.id;
-        trElemBlock.getElementsByClassName("prodEditCountFor")[0].setAttribute("for", "editCount" + prod.id);
-        trElemBlock.getElementsByClassName("prodEditCountId")[0].id = "editCount" + prod.id;
-        trElemBlock.getElementsByClassName("prodEditPriceFor")[0].setAttribute("for", "editPrice" + prod.id);
-        trElemBlock.getElementsByClassName("prodEditPriceId")[0].id = "editPrice" + prod.id;
-        trElemBlock.getElementsByClassName("prodEditInModal")[0].id = "editInModal" + prod.id;
-        trElemBlock.getElementsByClassName("#prodDropStartModal")[0].setAttribute("data-target", "#dropStartModal" + prod.id);
-        trElemBlock.getElementsByClassName("#prodDropStartModal")[0].id = "dropAboveModal" + prod.id;
-        trElemBlock.getElementsByClassName("prodDropStartModal")[0].id = "dropStartModal" + prod.id;
-        trElemBlock.getElementsByClassName("prodDropInModal")[0].id = "dropInModal" + prod.id;
 
+        trElemBlock.getElementsByClassName("rowName")[0].name = rowName;
+        trElemBlock.getElementsByClassName("rowPrice")[0].name = rowPrice;
+        trElemBlock.getElementsByClassName("rowAction")[0].name = rowAction;
+		
         tbodyDb.appendChild(trElemBlock);
+
+        document.forms[rowName].querySelector("a").innerHTML = prod.name;
+        document.forms[rowName].querySelector("span").innerHTML = prod.count;
+        document.forms[rowPrice].querySelector("div").innerHTML = formatterUsdCur.format(prod.price);
+
+        for (var i = 0; i < document.forms[rowAction].elements.length; i++) {
+            switch (document.forms[rowAction].elements[i].name) {
+                case "#editAboveModal":
+                    document.forms[rowAction].elements[i].id = "editAboveModal" + prod.id;
+                    break;
+                case "#dropAboveModal":
+                    document.forms[rowAction].elements[i].id = "dropAboveModal" + prod.id;
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     function getIndex(prodArr, prodId) { // Возвращает индекс товара в массиве по id товара.
@@ -120,16 +120,22 @@
         return -1;
     }
 
+	function addRetrieve() {
+		dbBtnInModal.classList.remove("btn-warning");
+		dbBtnInModal.classList.add("btn-primary");
+		dbBtnInModal.innerHTML = "Add";
+		dbBtnInModal.addEventListener("click", addPlace);
+	}
+	
     function addPlace() { // Размещает добавляемый объект в хранилище объектов.
         var prodObj = {},
-			correctness = +dbPropriety.value,
             priceRound;
 
-        if (correctness) {
+        if (+storeForm.storePropriety.value) {
             prodObj.id = currentId;
-            prodObj.name = dbName.value;
-            prodObj.count = +dbCount.value;
-            priceRound = +dbPrice.value;
+            prodObj.name = storeForm.storeName.value;
+            prodObj.count = +storeForm.storeCount.value;
+            priceRound = +storeForm.storePrice.value;
             prodObj.price = Math.round(priceRound * 100) / 100;
             prodStorage.push(prodObj);
             currentId++;
@@ -140,24 +146,25 @@
     function editRetrieve(prodId) { // Извлекает из хранилища сведения о товаре.
         prodIndex = getIndex(prodStorage, +prodId);
         if (prodIndex !== -1) {
-            dbName.value = prodStorage[prodIndex].name;
-            dbCount.value = prodStorage[prodIndex].count;
-            dbPrice.value = prodStorage[prodIndex].price;
+            storeForm.storeName.value = prodStorage[prodIndex].name;
+            storeForm.storeCount.value = prodStorage[prodIndex].count;
+            storeForm.storePrice.value = prodStorage[prodIndex].price;
         }
-        dbBtnInModal = document.getElementById("editInModal" + prodId);
+		dbBtnInModal.classList.remove("btn-primary");
+		dbBtnInModal.classList.add("btn-warning");
+		dbBtnInModal.innerHTML = "Update";
 		dbBtnInModal.addEventListener("click", editPlace);
     }
 
     function editPlace() { // Размещает отредактированные сведения о товаре в хранилище.
         setTimeout(function() {
             var prodObj = {},
-                correctness = +dbPropriety.value,
                 priceRound;
-            if (!!correctness) {
+            if (+storeForm.storePropriety.value) {
                 prodObj.id = currentId;
-                prodObj.name = dbName.value;
-                prodObj.count = +dbCount.value;
-                priceRound = +dbPrice.value;
+                prodObj.name = storeForm.storeName.value;
+                prodObj.count = +storeForm.storeCount.value;
+                priceRound = +storeForm.storePrice.value;
                 prodObj.price = Math.round(priceRound * 100) / 100;
                 prodStorage.push(prodObj);
                 currentId++;
@@ -171,7 +178,7 @@
 
     function dropRetrieve(prodId) { // Извлекает удаляемого товара.
         prodIndex = getIndex(prodStorage, +prodId);
-        dbBtnInModal = document.getElementById("dropInModal" + prodId);
+        dbBtnInModal = document.getElementById("dropInModal");
 		dbBtnInModal.addEventListener("click", dropPlace);
     }
 
@@ -185,11 +192,14 @@
     function tbodyClick(e) { // Кнопки редактирования или удаления.
         var target = e.target;
 
-        switch (target.id.substring(0, 8)) {
-            case "editAbov":
+        switch (target.id.substring(0, 13)) {
+            case "addAboveModal":
+                addRetrieve();
+                break;
+            case "editAboveModa":
                 editRetrieve(target.id.substring(14));
                 break;
-            case "dropAbov":
+            case "dropAboveModa":
                 dropRetrieve(target.id.substring(14));
                 break;
             default:

@@ -12,19 +12,18 @@
         flagName = false,
         flagCount = false,
         flagPrice = false,
-        inputName,
-        inputCount,
-        inputPrice,
-        changeBtnInModal,
-		changeBtnAboveModal = document.getElementById("addAboveModal"),
-		changeName = document.getElementById("storeName"),
-        changeCount = document.getElementById("storeCount"),
-        changePrice = document.getElementById("storePrice"),
-        changePropriety = document.getElementById("storePropriety"),
+		storeName = document.forms.storeForm.storeName,
+        storeCount = document.forms.storeForm.storeCount,
+        storePrice = document.forms.storeForm.storePrice,
+        storePropriety = document.forms.storeForm.storePropriety,
+		changeBtnAboveModal = document.forms.filterAndAddForm.addAboveModal,
+        changeName = document.forms.filterAndAddForm.addName,
+        changeCount = document.forms.filterAndAddForm.addCount,
+        changePrice = document.forms.filterAndAddForm.addPrice,
+        changeBtnInModal = document.forms.filterAndAddForm.changeInModal,
         tbodyEdit = document.getElementById("tbodyElem");
 
-    changeBtnAboveModal.addEventListener("click", addPrepare);
-	tbodyEdit.addEventListener("click", tbodyClick);
+	document.addEventListener("click", tbodyClick);
 	
     function showError(container, errorMessage) { // Отобразить ошибку.
         var msgElem = document.createElement("span");
@@ -40,55 +39,47 @@
     }
 
     function addPrepare() { // Очистка полей input при открытии модального окна.
-        inputName = document.getElementById("addName");
-        inputCount = document.getElementById("addCount");
-        inputPrice = document.getElementById("addPrice");
-        changeBtnInModal = document.getElementById("addInModal");
-        resetError(inputName.parentElement);
-        resetError(inputCount.parentElement);
-        resetError(inputPrice.parentElement);
+        resetError(changeName.parentElement);
+        resetError(changeCount.parentElement);
+        resetError(changePrice.parentElement);
         resetError(changeBtnInModal.parentElement);
-        changePropriety.value = 0;
+        storePropriety.value = 0;
         flagName = flagCount = flagPrice = false;
-        inputName.value = inputCount.value = inputPrice.value = "";
         changeName.value = changeCount.value = changePrice.value = "";
-		inputName.addEventListener("keypress", nameFormat);
-		inputName.addEventListener("paste", nameDeny);
-		inputName.addEventListener("blur", nameCheck);
-		inputCount.addEventListener("keypress", countFormat);
-		inputCount.addEventListener("paste", countDeny);
-		inputCount.addEventListener("blur", countCheck);
-		inputPrice.addEventListener("focus", priceRegain);
-		inputPrice.addEventListener("keypress", priceFormat);
-		inputPrice.addEventListener("paste", priceDeny);
-		inputPrice.addEventListener("blur", priceCheck);
+        storeName.value = storeCount.value = storePrice.value = "";
+		changeName.addEventListener("keypress", nameFormat);
+		changeName.addEventListener("paste", nameDeny);
+		changeName.addEventListener("blur", nameCheck);
+		changeCount.addEventListener("keypress", countFormat);
+		changeCount.addEventListener("paste", countDeny);
+		changeCount.addEventListener("blur", countCheck);
+		changePrice.addEventListener("focus", priceRegain);
+		changePrice.addEventListener("keypress", priceFormat);
+		changePrice.addEventListener("paste", priceDeny);
+		changePrice.addEventListener("blur", priceCheck);
 		changeBtnInModal.addEventListener("click", changeCheck);
     }
 
-    function editPrepare(prodId) { // Заполнение полей input значениями из хранилища.
-        inputName = document.getElementById("editName" + prodId);
-        inputCount = document.getElementById("editCount" + prodId);
-        inputPrice = document.getElementById("editPrice" + prodId);
-        changeBtnInModal = document.getElementById("editInModal" + prodId);
-        resetError(inputName.parentElement);
-        resetError(inputCount.parentElement);
-        resetError(inputPrice.parentElement);
+    function editPrepare() { // Заполнение полей input значениями из хранилища.
+        resetError(changeName.parentElement);
+        resetError(changeCount.parentElement);
+        resetError(changePrice.parentElement);
         resetError(changeBtnInModal.parentElement);
-        changePropriety.value = 0;
+        storePropriety.value = 0;
         flagName = flagCount = flagPrice = false;
-        inputName.value = changeName.value;
-        inputCount.value = changeCount.value;
-        inputPrice.value = formatterUsdCur.format(+changePrice.value);
-        inputName.addEventListener("keypress", nameFormat);
-        inputName.addEventListener("paste", nameDeny);
-        inputName.addEventListener("blur", nameCheck);
-        inputCount.addEventListener("keypress", countFormat);
-        inputCount.addEventListener("paste", countDeny);
-        inputCount.addEventListener("blur", countCheck);
-        inputPrice.addEventListener("focus", priceRegain);
-        inputPrice.addEventListener("keypress", priceFormat);
-        inputPrice.addEventListener("paste", priceDeny);
-        inputPrice.addEventListener("blur", priceCheck);
+        changeName.value = storeName.value;
+        changeCount.value = storeCount.value;
+        changePrice.value = formatterUsdCur.format(+storePrice.value);
+        changeName.addEventListener("keypress", nameFormat);
+        changeName.addEventListener("paste", nameDeny);
+        changeName.addEventListener("blur", nameCheck);
+        changeCount.addEventListener("keypress", countFormat);
+        changeCount.addEventListener("paste", countDeny);
+        changeCount.addEventListener("blur", countCheck);
+        changePrice.addEventListener("focus", priceRegain);
+        changePrice.addEventListener("keypress", priceFormat);
+        changePrice.addEventListener("paste", priceDeny);
+        changePrice.addEventListener("blur", priceCheck);
         changeBtnInModal.addEventListener("click", changeCheck);
     }
 
@@ -97,7 +88,7 @@
             code = e.charCode || e.keyCode,
             nameSymbol;
 
-        resetError(inputName.parentElement);
+        resetError(changeName.parentElement);
         if (code < controlCharMaxNum ||
 			e.charCode === firefoxFuncBtnNum ||
 			e.ctrlKey || e.altKey) {
@@ -106,9 +97,9 @@
         nameSymbol = String.fromCharCode(code);
 
         if (!nameMask.test(nameSymbol)) {
-            showError(inputName.parentElement, "* Введите буквы, цифры или спецсимволы");
-        } else if (inputName.value.length >= 15) {
-            showError(inputName.parentElement, "* Имя должно быть от 1 до 15 символов");
+            showError(changeName.parentElement, "* Введите буквы, цифры или спецсимволы");
+        } else if (changeName.value.length >= 15) {
+            showError(changeName.parentElement, "* Имя должно быть от 1 до 15 символов");
         } else {
             return;
         }
@@ -116,29 +107,29 @@
     }
 
     function nameCheck() { // Проверка по завершении редактирования.
-        var nameText = inputName.value.trim(),
+        var nameText = changeName.value.trim(),
             emptyName = false; 
         if (nameText === "") {
             emptyName = true;
         }
 
-        resetError(inputName.parentElement);
+        resetError(changeName.parentElement);
 
         if (emptyName) {
-            showError(inputName.parentElement, "* Поле не может быть пустым или из одних пробелов");
+            showError(changeName.parentElement, "* Поле не может быть пустым или из одних пробелов");
         } else if (!nameWildcard.test(nameText)) {
-            showError(inputName.parentElement, "* Должно быть от 1 до 15 букв, цифр или спецсимволов");
+            showError(changeName.parentElement, "* Должно быть от 1 до 15 букв, цифр или спецсимволов");
         } else {
+            storeName.value = nameText;
             changeName.value = nameText;
-            inputName.value = nameText;
             flagName = true;
             proprietyControl();
         }
     }
 
     function nameDeny(e) { // Запрещение копирования из буфера обмена.
-        resetError(inputName.parentElement);
-        showError(inputName.parentElement, "* Нельзя копировать из буфера обмена");
+        resetError(changeName.parentElement);
+        showError(changeName.parentElement, "* Нельзя копировать из буфера обмена");
         e.preventDefault();
     }
 
@@ -147,7 +138,7 @@
             code = e.charCode || e.keyCode,
             countSymbol;
 
-        resetError(inputCount.parentElement);
+        resetError(changeCount.parentElement);
         if (code < controlCharMaxNum ||
 			e.charCode === firefoxFuncBtnNum ||
 			e.ctrlKey || e.altKey) {
@@ -156,9 +147,9 @@
         countSymbol = String.fromCharCode(code);
 
         if (!countMask.test(countSymbol)) {
-            showError(inputCount.parentElement, "* Нужно вводить цифры");
-        } else if (inputCount.value.length >= 15) {
-            showError(inputCount.parentElement, "* Количество должно быть от 1 до 15 цифр");
+            showError(changeCount.parentElement, "* Нужно вводить цифры");
+        } else if (changeCount.value.length >= 15) {
+            showError(changeCount.parentElement, "* Количество должно быть от 1 до 15 цифр");
         } else {
             return;
         }
@@ -166,33 +157,33 @@
     }
 
     function countCheck() { // Проверка по завершении редактирования.
-        var countNumber = inputCount.value,
+        var countNumber = changeCount.value,
             emptyCount = false;
         if (countNumber === "") {
             emptyCount = true;
         }
 
         countNumber = +countNumber; // Преобразование к числовому значению.
-        resetError(inputCount.parentElement);
+        resetError(changeCount.parentElement);
 
         if (emptyCount) {
-            showError(inputCount.parentElement, "* Введена пустая строка. Повторите ввод");
+            showError(changeCount.parentElement, "* Введена пустая строка. Повторите ввод");
         } else if (isNaN(countNumber)) {
-            showError(inputCount.parentElement, "* Введено не число. Повторите ввод");
+            showError(changeCount.parentElement, "* Введено не число. Повторите ввод");
         } else if (!countNumber) {
-            inputCount.value = 0;
-            showError(inputCount.parentElement, "* Введён ноль. Повторите ввод");
+            changeCount.value = 0;
+            showError(changeCount.parentElement, "* Введён ноль. Повторите ввод");
         } else {
+            storeCount.value = countNumber;
             changeCount.value = countNumber;
-            inputCount.value = countNumber;
             flagCount = true;
             proprietyControl();
         }
     }
 
     function countDeny(e) { // Запрещение копирования из буфера обмена.
-        resetError(inputCount.parentElement);
-        showError(inputCount.parentElement, "* Нельзя копировать из буфера обмена");
+        resetError(changeCount.parentElement);
+        showError(changeCount.parentElement, "* Нельзя копировать из буфера обмена");
         e.preventDefault();
     }
 
@@ -201,7 +192,7 @@
             code = e.charCode || e.keyCode,
             priceSymbol;
 
-        resetError(inputPrice.parentElement);
+        resetError(changePrice.parentElement);
         if (code < controlCharMaxNum ||
 			e.charCode === firefoxFuncBtnNum ||
 			e.ctrlKey || e.altKey) {
@@ -211,9 +202,9 @@
         priceSymbol = String.fromCharCode(code);
 
         if (!priceMask.test(priceSymbol)) {
-            showError(inputPrice.parentElement, "* Введите цифры или десятичную точку");
-        } else if (inputPrice.value.length >= 15) {
-            showError(inputPrice.parentElement, "* Цена должна содержать от 1 до 15 цифр или точку");
+            showError(changePrice.parentElement, "* Введите цифры или десятичную точку");
+        } else if (changePrice.value.length >= 15) {
+            showError(changePrice.parentElement, "* Цена должна содержать от 1 до 15 цифр или точку");
         } else {
             return;
         }
@@ -221,45 +212,45 @@
     }
 
     function priceRegain() { // Восстановление отображения цены при получении фокуса.
-        if (changePrice.value) {
-            inputPrice.value = changePrice.value;
+        if (storePrice.value) {
+            changePrice.value = storePrice.value;
         }
     }
 
     function priceCheck() { // Проверка по завершении редактирования.
-        var priceNumber = inputPrice.value,
+        var priceNumber = changePrice.value,
             emptyPrice = false;
 
         if (priceNumber === "") {
             emptyPrice = true;
         }
 
-        resetError(inputPrice.parentElement);
+        resetError(changePrice.parentElement);
         priceNumber = +priceNumber;
 
         if (emptyPrice) {
-            showError(inputPrice.parentElement, "* Введена пустая строка. Повторите ввод");
+            showError(changePrice.parentElement, "* Введена пустая строка. Повторите ввод");
         } else if (isNaN(priceNumber)) {
-            showError(inputPrice.parentElement, "* Введено не число. Повторите ввод");
+            showError(changePrice.parentElement, "* Введено не число. Повторите ввод");
         } else if (!priceNumber) {
-            inputPrice.value = 0;
-            showError(inputPrice.parentElement, "* Введён ноль. Повторите ввод");
+            changePrice.value = 0;
+            showError(changePrice.parentElement, "* Введён ноль. Повторите ввод");
         } else {
-            changePrice.value = Math.round(priceNumber * 100) / 100;
-            inputPrice.value = formatterUsdCur.format(priceNumber);
+            storePrice.value = Math.round(priceNumber * 100) / 100;
+            changePrice.value = formatterUsdCur.format(priceNumber);
             flagPrice = true;
             proprietyControl();
         }
     }
 
     function priceDeny(e) { // Запрещение копирования из буфера обмена.
-        resetError(inputPrice.parentElement);
-        showError(inputPrice.parentElement, "* Нельзя копировать из буфера обмена");
+        resetError(changePrice.parentElement);
+        showError(changePrice.parentElement, "* Нельзя копировать из буфера обмена");
         e.preventDefault();
     }
 
     function changeCheck(e) { // Проверка корректности ввода.
-        var correctness = +changePropriety.value;
+        var correctness = +storePropriety.value;
         resetError(changeBtnInModal.parentElement);
         nameCheck();
         countCheck();
@@ -274,14 +265,22 @@
 
     function proprietyControl() { // Проверка корректности ввода.
         if (flagName && flagCount && flagPrice) {
-            changePropriety.value = 1;
+            storePropriety.value = 1;
         }
     }
 
     function tbodyClick(e) { // Обработка нажатия на кнопку редактирования.
         var target = e.target;
-		if (target.id.substring(0, 8) === "editAbov") {
-			editPrepare(target.id.substring(14));
-		}
+		
+        switch (target.id.substring(0, 13)) {
+            case "addAboveModal":
+                addPrepare();
+                break;
+            case "editAboveModa":
+                editPrepare();
+                break;
+            default:
+                break;
+        }
     }
 })();

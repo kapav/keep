@@ -14,38 +14,42 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12">
-				<form name="storeForm">
-					<!--Корректность ввода.-->
-					<input type="hidden" id="storePropriety" value="0">
-					<!--Имя товара для помещения в хранилище или редактирования.-->
-					<input type="hidden" id="storeName" value="">
-					<!--Количество товара для помещения в хранилище или редактирования.-->
-					<input type="hidden" id="storeCount" value="">
-					<!--Значение цены для помещения в хранилище или редактирования.-->
-					<input type="hidden" id="storePrice" value="">
-				</form>
+                <form name="storeForm">
+                    <!--Имя товара для помещения в хранилище или редактирования.-->
+                    <input type="hidden" id="storeName" value="">
+                    <!--Количество товара для помещения в хранилище или редактирования.-->
+                    <input type="hidden" id="storeCount" value="">
+                    <!--Значение цены для помещения в хранилище или редактирования.-->
+                    <input type="hidden" id="storePrice" value="">
+                    <!--Корректность ввода.-->
+                    <input type="hidden" id="storePropriety" value="0">
+                </form>
             </div>
         </div>
     </div>
     <div class="container-fluid">
-        <div class="row row-above-table">
-		<form name="filterForm">
-            <div class="col-lg-5">
-                <!--Значение storeFilter для фильтрации по имени товара.-->
-                <input type="text" class="form-control input-lg" id="storeFilter" placeholder="Фильтр по подстроке с именем товара" value=""/>
-            </div>
-            <div class="col-lg-2">
-				<!--Кнопка поиска над модальным-->
-                <button type="button" class="btn btn-default btn-lg btn-block" id="searchAboveModal">Search</button>
-            </div>
-		</form>
-            <div class="col-lg-offset-2 col-lg-3">
-			<form name="addForm">
-                <!--Кнопка добавления над модальным-->
-                <button type="button" class="btn btn-primary btn-lg btn-block" id="addAboveModal" data-toggle="modal" data-target="#addModal" data-backdrop="static">Add New</button>
+        <div class="row">
+            <div id="modifyModal" class="col-lg-12">
 
-                <!-- Modal Начало модального окна добавления-->
-                <div id="addModal" class="modal fade" role="dialog">
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+		<form name="filterAndAddForm">
+            <div class="col-lg-5">
+                <!--Значение для фильтрации по имени товара.-->
+                <input type="text" class="form-control input-lg" id="filterName" placeholder="Фильтр по подстроке с именем товара" value=""/>
+            </div>
+		    <div class="col-lg-2">
+		        <!--Кнопка поиска над модальным-->
+		        <button type="button" class="btn btn-default btn-lg btn-block" id="filterAboveModal">Search</button>
+		    </div>
+            <div class="col-lg-offset-2 col-lg-3">
+                <!--Кнопка добавления над модальным-->
+                <button type="button" class="btn btn-primary btn-lg btn-block" id="addAboveModal" data-toggle="modal" data-target="#changeModal" data-backdrop="static">Add New</button>
+                <!-- Modal Начало модального окна изменения-->
+                <div id="changeModal" class="modal fade" role="dialog">
                     <div class="modal-dialog modal-lg">
 
                         <!-- Modal content -->
@@ -86,7 +90,7 @@
                                     <div class="container-fluid">
                                         <div class="row">
                                             <div class="col-lg-3">
-                                                <input type="text" class="form-control" id="addCount" placeholder="Количество"/>
+                                                <input type="text" class="form-control" id="addCount" placeholder="Количество" />
                                             </div>
                                         </div>
                                     </div>
@@ -102,7 +106,7 @@
                                     <div class="container-fluid">
                                         <div class="row">
                                             <div class="col-lg-6">
-                                                <input type="text" class="form-control" id="addPrice" placeholder="Цена товара"/>
+                                                <input type="text" class="form-control" id="addPrice" placeholder="Цена товара" />
                                             </div>
                                         </div>
                                     </div>
@@ -112,7 +116,7 @@
                                 <div class="container-fluid">
                                     <div class="row">
                                         <div class="col-lg-4">
-                                            <button type="button" class="btn btn-primary btn-lg btn-block" data-dismiss="modal" id="addInModal">Add</button>
+                                            <button type="button" class="btn btn-primary btn-lg btn-block" data-dismiss="modal" id="changeInModal">Add</button>
                                         </div>
                                     </div>
                                 </div>
@@ -122,9 +126,39 @@
                     </div>
                 </div>
                 <!-- Modal end -->
-
-			</form>
             </div>
+            <!-- Modal Начало модального окна удаления-->
+            <div id="dropModal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+
+                    <!-- Modal content -->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Are you sure?</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>Are you sure you want to perform this action?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-lg-offset-1 col-lg-5">
+                                        <!--Кнопка удаления в модальном-->
+                                        <button id="dropInModal" type="button" name="prodDropInModal" class="btn btn-danger btn-lg btn-block" data-dismiss="modal">Yes</button>
+                                    </div>
+                                    <div class="col-lg-5">
+                                        <button type="button" class="btn btn-primary btn-lg btn-block" data-dismiss="modal">No</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!-- Modal end -->
+        </form>
         </div>
     </div>
     <div>
@@ -184,164 +218,52 @@
     <script src="Scripts/bootstrap.min.js"></script>
     <script type="text/template" id="rowBlock">
         <td>
-		<form name="rowName">
             <div class="container-fluid">
                 <div class="row">
+                    <form name="rowName" class="rowName">
                     <div class="col-lg-10">
                         <!--Имя товара-->
-                        <a href="#" class="prodName">Товар 1</a>
+                        <a href="#" name="prodName">Товар 1</a>
                     </div>
                     <div class="col-lg-2 text-right">
                         <!--Количество товара-->
-                        <span class="badge prodCount">5</span>
+                        <span name="prodCount" class="badge">5</span>
                     </div>
+                    </form>
                 </div>
             </div>
-		</form>
         </td>
         <td class="text-center">
-		<form name="rowPrice">
             <div class="container-fluid">
                 <div class="row">
                     <!--Отображаемая цена, взятая из хранилища.-->
-                    <div class="col-lg-12 prodPrice">
+                    <form name="rowPrice" class="rowPrice">
+                    <div name="prodPrice" class="col-lg-12">
                         $12,35
                     </div>
+                    </form>
                 </div>
             </div>
-		</form>
         </td>
         <td>
-		<form name="rowAction">
+		<form name="rowAction" class="rowAction">
             <div class="container-fluid">
                 <div class="row">
                     <!--Редактирование товара-->
                     <div class="col-lg-6">
                         <!--Кнопка редактирования над модальным-->
-                        <button type="button" class="btn btn-warning btn-lg btn-block #prodEditStartModal" data-toggle="modal" data-backdrop="static">Edit</button>
-
+                        <button type="button" name="#editAboveModal" class="btn btn-warning btn-lg btn-block" data-toggle="modal" data-backdrop="static" data-target="#changeModal">Edit</button>
+                        
                         <!-- Modal Начало модального окна редактирования-->
-                        <div class="modal fade prodEditStartModal" role="dialog">
-                            <div class="modal-dialog modal-lg">
-
-                                <!-- Modal content -->
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="form-group form-group-lg">
-                                            <div class="container-fluid">
-                                                <div class="row">
-                                                    <div class="col-lg-12">
-                                                        <!--Метка имени товара-->
-                                                        <label class="prodEditNameFor">Name:</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="container-fluid">
-                                                <div class="row">
-                                                    <div class="col-lg-6">
-                                                        <!--Поле ввода имени товара-->
-                                                        <input type="text" class="form-control prodEditNameId" placeholder="Имя товара" />
-                                                    </div>
-                                                    <div class="col-lg-6">
-                                                        <p class="form-control-static">
-                                                            <span class="glyphicon glyphicon-asterisk"></span> Required field
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group form-group-lg">
-                                            <div class="container-fluid">
-                                                <div class="row">
-                                                    <div class="col-lg-12">
-                                                        <!--Метка количества товара-->
-                                                        <label class="prodEditCountFor">Count:</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="container-fluid">
-                                                <div class="row">
-                                                    <div class="col-lg-3">
-                                                        <!--Поле ввода количества товара-->
-                                                        <input type="text" class="form-control prodEditCountId" placeholder="Количество" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group form-group-lg">
-                                            <div class="container-fluid">
-                                                <div class="row">
-                                                    <div class="col-lg-12">
-                                                        <!--Метка цены товара-->
-                                                        <label class="prodEditPriceFor">Price:</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="container-fluid">
-                                                <div class="row">
-                                                    <div class="col-lg-6">
-                                                        <!--Поле ввода цены товара-->
-                                                        <input type="text" class="form-control prodEditPriceId" placeholder="Цена товара" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <div class="container-fluid">
-                                            <div class="row">
-                                                <div class="col-lg-4">
-                                                    <!--Кнопка обновления в модальном-->
-                                                    <button type="button" class="btn btn-warning btn-lg btn-block prodEditInModal" data-dismiss="modal">Update</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
                         <!-- Modal end -->
-
+                        
                     </div>
                     <!--Удаление товара-->
                     <div class="col-lg-6">
                         <!--Кнопка удаления над модальным-->
-                        <button type="button" class="btn btn-danger btn-lg btn-block #prodDropStartModal" data-toggle="modal" data-backdrop="static">Delete</button>
+                        <button type="button" name="#dropAboveModal" class="btn btn-danger btn-lg btn-block" data-toggle="modal" data-backdrop="static" data-target="#dropModal">Delete</button>
 
                         <!-- Modal Начало модального окна удаления-->
-                        <div class="modal fade prodDropStartModal" role="dialog">
-                            <div class="modal-dialog">
-
-                                <!-- Modal content -->
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                        <h4 class="modal-title">Are you sure?</h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        <p>Are you sure you want to perform this action?</p>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <div class="container-fluid">
-                                            <div class="row">
-                                                <div class="col-lg-offset-1 col-lg-5">
-                                                    <!--Кнопка удаления в модальном-->
-                                                    <button type="button" class="btn btn-danger btn-lg btn-block prodDropInModal" data-dismiss="modal">Yes</button>
-                                                </div>
-                                                <div class="col-lg-5">
-                                                    <button type="button" class="btn btn-primary btn-lg btn-block" data-dismiss="modal">No</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
                         <!-- Modal end -->
 
                     </div>
