@@ -17,12 +17,13 @@
         storePrice = document.forms.storeForm.storePrice,
         storePropriety = document.forms.storeForm.storePropriety,
 		changeBtnAboveModal = document.forms.filterAndAddForm.addAboveModal,
-        changeName = document.forms.filterAndAddForm.addName,
-        changeCount = document.forms.filterAndAddForm.addCount,
-        changePrice = document.forms.filterAndAddForm.addPrice,
-        changeBtnInModal = document.forms.filterAndAddForm.changeInModal,
+        changeName = document.forms.changeForm.changeName,
+        changeCount = document.forms.changeForm.changeCount,
+        changePrice = document.forms.changeForm.changePrice,
+        changeBtnInModal = document.forms.changeForm.changeInModal,
         tbodyEdit = document.getElementById("tbodyElem");
 
+	changeBtnInModal.addEventListener("click", changeCheck);
 	document.addEventListener("click", tbodyClick);
 	
     function showError(container, errorMessage) { // Отобразить ошибку.
@@ -37,16 +38,17 @@
             container.removeChild(container.firstChild);
         }
     }
-
-    function addPrepare() { // Очистка полей input при открытии модального окна.
+	
+	function resetErrorsProprietyAndFlags() {
         resetError(changeName.parentElement);
         resetError(changeCount.parentElement);
         resetError(changePrice.parentElement);
         resetError(changeBtnInModal.parentElement);
         storePropriety.value = 0;
         flagName = flagCount = flagPrice = false;
-        changeName.value = changeCount.value = changePrice.value = "";
-        storeName.value = storeCount.value = storePrice.value = "";
+	}
+	
+	function addEventListenersToInputs() {
 		changeName.addEventListener("keypress", nameFormat);
 		changeName.addEventListener("paste", nameDeny);
 		changeName.addEventListener("blur", nameCheck);
@@ -57,34 +59,25 @@
 		changePrice.addEventListener("keypress", priceFormat);
 		changePrice.addEventListener("paste", priceDeny);
 		changePrice.addEventListener("blur", priceCheck);
-		changeBtnInModal.addEventListener("click", changeCheck);
+	}
+
+    function addPrepare() { // Очистка полей input при открытии модального окна.
+		resetErrorsProprietyAndFlags();
+        changeName.value = changeCount.value = changePrice.value = "";
+        storeName.value = storeCount.value = storePrice.value = "";
+		addEventListenersToInputs();
     }
 
     function editPrepare() { // Заполнение полей input значениями из хранилища.
-        resetError(changeName.parentElement);
-        resetError(changeCount.parentElement);
-        resetError(changePrice.parentElement);
-        resetError(changeBtnInModal.parentElement);
-        storePropriety.value = 0;
-        flagName = flagCount = flagPrice = false;
+		resetErrorsProprietyAndFlags();
         changeName.value = storeName.value;
         changeCount.value = storeCount.value;
         changePrice.value = formatterUsdCur.format(+storePrice.value);
-        changeName.addEventListener("keypress", nameFormat);
-        changeName.addEventListener("paste", nameDeny);
-        changeName.addEventListener("blur", nameCheck);
-        changeCount.addEventListener("keypress", countFormat);
-        changeCount.addEventListener("paste", countDeny);
-        changeCount.addEventListener("blur", countCheck);
-        changePrice.addEventListener("focus", priceRegain);
-        changePrice.addEventListener("keypress", priceFormat);
-        changePrice.addEventListener("paste", priceDeny);
-        changePrice.addEventListener("blur", priceCheck);
-        changeBtnInModal.addEventListener("click", changeCheck);
+		addEventListenersToInputs();
     }
 
-    function nameFormat(evt) { // Проверка символов по одному.
-        var e = evt || window.evt,
+    function nameFormat(e) { // Проверка символов по одному.
+        var e = e || window.e,
             code = e.charCode || e.keyCode,
             nameSymbol;
 
@@ -133,8 +126,8 @@
         e.preventDefault();
     }
 
-    function countFormat(evt) { // Проверка символов на цифры по одному.
-        var e = evt || window.evt,
+    function countFormat(e) { // Проверка символов на цифры по одному.
+        var e = e || window.e,
             code = e.charCode || e.keyCode,
             countSymbol;
 
@@ -187,8 +180,8 @@
         e.preventDefault();
     }
 
-    function priceFormat(evt) { // Проверка символов по одному.
-        var e = evt || window.evt,
+    function priceFormat(e) { // Проверка символов по одному.
+        var e = e || window.e,
             code = e.charCode || e.keyCode,
             priceSymbol;
 

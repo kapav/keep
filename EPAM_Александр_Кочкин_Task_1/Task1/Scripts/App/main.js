@@ -14,7 +14,7 @@
         sortingName = false,
         sortingPrice = false,
 		dbBtnAboveModal = document.forms.filterAndAddForm.filterAboveModal,
-		dbBtnInModal = document.forms.filterAndAddForm.changeInModal,
+		dbBtnInModal = document.forms.changeForm.changeInModal,
 		toggleName = document.forms.toggleNameForm.toggleName,
 		togglePrice = document.forms.togglePriceForm.togglePrice,
         storeForm = document.forms.storeForm,
@@ -24,6 +24,7 @@
     dbBtnAboveModal.addEventListener("click", searchDb);
     toggleName.addEventListener("click", sortingToggleName);
     togglePrice.addEventListener("click", sortingTogglePrice);
+	dbBtnInModal.addEventListener("click", changePlace);
 	document.addEventListener("click", tbodyClick);
 
     function drawDb(prodRow) { // Отрисовывает сведения о товарах.
@@ -120,29 +121,13 @@
         return -1;
     }
 
-	function addRetrieve() {
+	function addRetrieve() { // Подготавливает добавление товара.
 		dbBtnInModal.classList.remove("btn-warning");
 		dbBtnInModal.classList.add("btn-primary");
 		dbBtnInModal.innerHTML = "Add";
-		dbBtnInModal.addEventListener("click", addPlace);
+		dbBtnInModal.dataset.isUpdate = "0";
 	}
 	
-    function addPlace() { // Размещает добавляемый объект в хранилище объектов.
-        var prodObj = {},
-            priceRound;
-
-        if (+storeForm.storePropriety.value) {
-            prodObj.id = currentId;
-            prodObj.name = storeForm.storeName.value;
-            prodObj.count = +storeForm.storeCount.value;
-            priceRound = +storeForm.storePrice.value;
-            prodObj.price = Math.round(priceRound * 100) / 100;
-            prodStorage.push(prodObj);
-            currentId++;
-            searchDb();
-        } 
-    }
-
     function editRetrieve(prodId) { // Извлекает из хранилища сведения о товаре.
         prodIndex = getIndex(prodStorage, +prodId);
         if (prodIndex !== -1) {
@@ -153,40 +138,43 @@
 		dbBtnInModal.classList.remove("btn-primary");
 		dbBtnInModal.classList.add("btn-warning");
 		dbBtnInModal.innerHTML = "Update";
-		dbBtnInModal.addEventListener("click", editPlace);
+		dbBtnInModal.dataset.isUpdate = "1";
     }
-
-    function editPlace() { // Размещает отредактированные сведения о товаре в хранилище.
-        setTimeout(function() {
-            var prodObj = {},
-                priceRound;
-            if (+storeForm.storePropriety.value) {
-                prodObj.id = currentId;
-                prodObj.name = storeForm.storeName.value;
-                prodObj.count = +storeForm.storeCount.value;
-                priceRound = +storeForm.storePrice.value;
-                prodObj.price = Math.round(priceRound * 100) / 100;
-                prodStorage.push(prodObj);
-                currentId++;
-                prodStorage.splice(prodIndex, 1);
-                searchDb();
-            }
-        }, 0);
+	
+	function clearSpareElem() {
         var spareElem = document.querySelector("div.modal-backdrop.fade.in");
         if (spareElem) { spareElem.parentNode.removeChild(spareElem); }
+	}
+
+    function changePlace() { // Размещает отредактированные сведения о товаре в хранилище.
+		var prodObj = {},
+			priceRound;
+		if (+storeForm.storePropriety.value) {
+			prodObj.id = currentId;
+			prodObj.name = storeForm.storeName.value;
+			prodObj.count = +storeForm.storeCount.value;
+			priceRound = +storeForm.storePrice.value;
+			prodObj.price = Math.round(priceRound * 100) / 100;
+			prodStorage.push(prodObj);
+			currentId++;
+			if (+dbBtnInModal.dataset.isUpdate) {
+				prodStorage.splice(prodIndex, 1);
+			}
+			searchDb();
+			clearSpareElem();
+		}
     }
 
-    function dropRetrieve(prodId) { // Извлекает удаляемого товара.
+    function dropRetrieve(prodId) { // Извлекает удаляемый товар.
         prodIndex = getIndex(prodStorage, +prodId);
-        dbBtnInModal = document.getElementById("dropInModal");
+        dbBtnInModal = document.forms.dropForm.dropInModal;
 		dbBtnInModal.addEventListener("click", dropPlace);
     }
 
     function dropPlace() { // Удаляет из хранилища объект товара, используя его индекс.
         prodStorage.splice(prodIndex, 1);
         searchDb();
-        var spareElem = document.querySelector("div.modal-backdrop.fade.in");
-        if (spareElem) { spareElem.parentNode.removeChild(spareElem); }
+		clearSpareElem();
     }
 
     function tbodyClick(e) { // Кнопки редактирования или удаления.

@@ -19,8 +19,8 @@
         }
     }
 
-    function filterFormat(evt) { // Проверка символов по одному.
-        var e = evt || window.evt,
+    function filterFormat(e) { // Проверка символов по одному.
+        var e = e || window.e,
             code = e.charCode || e.keyCode,
             filterSymbol;
 
