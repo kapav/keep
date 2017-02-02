@@ -14,7 +14,7 @@
         sortingName = false,
         sortingPrice = false,
 		dbBtnFilter = document.forms.filterAndAddForm.filterAboveModal,
-		dbBtnAboveModal = document.forms.filterAndAddForm.addAboveModal,
+        dbBtnAboveModal = document.forms.filterAndAddForm.addAboveModal,
 		dbBtnInModal = document.forms.changeForm.changeInModal,
 		toggleName = document.forms.toggleNameForm.toggleName,
 		togglePrice = document.forms.togglePriceForm.togglePrice,
@@ -24,7 +24,7 @@
     dbBtnFilter.addEventListener("click", searchDb);
     toggleName.addEventListener("click", sortingToggleName);
     togglePrice.addEventListener("click", sortingTogglePrice);
-	dbBtnAboveModal.addEventListener("click", addRetrieve);
+    dbBtnAboveModal.addEventListener("click", addRetrieve);
 	dbBtnInModal.addEventListener("click", changePlace);
 	tbodyDb.addEventListener("click", tbodyClick);
 

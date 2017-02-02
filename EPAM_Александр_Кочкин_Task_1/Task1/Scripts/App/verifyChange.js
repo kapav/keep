@@ -12,14 +12,14 @@
         flagName = false,
         flagCount = false,
         flagPrice = false,
-		addBtnAboveModal = document.forms.filterAndAddForm.addAboveModal,
+        addBtnAboveModal = document.forms.filterAndAddForm.addAboveModal,
         changeName = document.forms.changeForm.changeName,
         changeCount = document.forms.changeForm.changeCount,
         changePrice = document.forms.changeForm.changePrice,
         changeBtnInModal = document.forms.changeForm.changeInModal,
-		tbodyChange = document.getElementById("tbodyElem");
+        tbodyChange = document.getElementById("tbodyElem");
 
-	addBtnAboveModal.addEventListener("click", addPrepare);
+    addBtnAboveModal.addEventListener("click", addPrepare);
 	changeBtnInModal.addEventListener("click", changeCheck);
 	tbodyChange.addEventListener("click", tbodyClick);
 	
@@ -66,13 +66,13 @@
     }
 
     function editPrepare() { // Заполнение полей input значениями из хранилища.
-	    setTimeout(function() {
-			resetErrorsProprietyAndFlags();
-			changeName.value = appConfig.name;
-			changeCount.value = appConfig.count;
-			changePrice.value = formatterUsdCur.format(+appConfig.price);
-			addEventListenersToInputs();
-	    }, 0);
+        setTimeout(function() {
+            resetErrorsProprietyAndFlags();
+            changeName.value = appConfig.name;
+            changeCount.value = appConfig.count;
+            changePrice.value = formatterUsdCur.format(+appConfig.price);
+            addEventListenersToInputs();
+        }, 0);
     }
 
     function nameFormat(evt) { // Проверка символов по одному.
@@ -263,8 +263,8 @@
     function tbodyClick(e) { // Обработка нажатия на кнопку редактирования.
         var target = e.target;
 		
-		if (target.id.substring(0, 14) === "editAboveModal") {
-			editPrepare();
-		}
+        if (target.id.substring(0, 14) === "editAboveModal") {
+            editPrepare();
+        }
     }
 })();
