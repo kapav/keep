@@ -12,13 +12,16 @@
         flagName = false,
         flagCount = false,
         flagPrice = false,
+		addBtnAboveModal = document.forms.filterAndAddForm.addAboveModal,
         changeName = document.forms.changeForm.changeName,
         changeCount = document.forms.changeForm.changeCount,
         changePrice = document.forms.changeForm.changePrice,
-        changeBtnInModal = document.forms.changeForm.changeInModal;
+        changeBtnInModal = document.forms.changeForm.changeInModal,
+		tbodyChange = document.getElementById("tbodyElem");
 
+	addBtnAboveModal.addEventListener("click", addPrepare);
 	changeBtnInModal.addEventListener("click", changeCheck);
-	document.addEventListener("click", tbodyClick);
+	tbodyChange.addEventListener("click", tbodyClick);
 	
     function showError(container, errorMessage) { // Отобразить ошибку.
         var msgElem = document.createElement("span");
@@ -63,11 +66,13 @@
     }
 
     function editPrepare() { // Заполнение полей input значениями из хранилища.
-		resetErrorsProprietyAndFlags();
-		changeName.value = appConfig.name;
-		changeCount.value = appConfig.count;
-		changePrice.value = formatterUsdCur.format(+appConfig.price);
-		addEventListenersToInputs();
+	    setTimeout(function() {
+			resetErrorsProprietyAndFlags();
+			changeName.value = appConfig.name;
+			changeCount.value = appConfig.count;
+			changePrice.value = formatterUsdCur.format(+appConfig.price);
+			addEventListenersToInputs();
+	    }, 0);
     }
 
     function nameFormat(evt) { // Проверка символов по одному.
@@ -258,15 +263,8 @@
     function tbodyClick(e) { // Обработка нажатия на кнопку редактирования.
         var target = e.target;
 		
-        switch (target.id.substring(0, 13)) {
-            case "addAboveModal":
-                addPrepare();
-                break;
-            case "editAboveModa":
-                editPrepare();
-                break;
-            default:
-                break;
-        }
+		if (target.id.substring(0, 14) === "editAboveModal") {
+			editPrepare();
+		}
     }
 })();

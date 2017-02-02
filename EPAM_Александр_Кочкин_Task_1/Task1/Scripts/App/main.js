@@ -13,18 +13,20 @@
         prodIndex = -1,
         sortingName = false,
         sortingPrice = false,
-		dbBtnAboveModal = document.forms.filterAndAddForm.filterAboveModal,
+		dbBtnFilter = document.forms.filterAndAddForm.filterAboveModal,
+		dbBtnAboveModal = document.forms.filterAndAddForm.addAboveModal,
 		dbBtnInModal = document.forms.changeForm.changeInModal,
 		toggleName = document.forms.toggleNameForm.toggleName,
 		togglePrice = document.forms.togglePriceForm.togglePrice,
         tbodyDb = document.getElementById("tbodyElem");
 
     window.addEventListener("load", displayDb);
-    dbBtnAboveModal.addEventListener("click", searchDb);
+    dbBtnFilter.addEventListener("click", searchDb);
     toggleName.addEventListener("click", sortingToggleName);
     togglePrice.addEventListener("click", sortingTogglePrice);
+	dbBtnAboveModal.addEventListener("click", addRetrieve);
 	dbBtnInModal.addEventListener("click", changePlace);
-	document.addEventListener("click", tbodyClick);
+	tbodyDb.addEventListener("click", tbodyClick);
 
     function drawDb(prodRow) { // Отрисовывает сведения о товарах.
         tbodyDb.innerHTML = "";
@@ -37,7 +39,7 @@
 	}
 	
 	function searchDb() { // Фильтрация по имени товара.
-	    var dbFilter = document.getElementById("filterName"),
+	    var dbFilter = document.forms.filterAndAddForm.filterName,
 	        dbFilterUpperCase = dbFilter.value.toUpperCase();
         prodShow = prodStorage.filter(function (prod) {
             return prod.name.slice(0, dbFilter.value.length).toUpperCase() === dbFilterUpperCase;
@@ -182,9 +184,6 @@
         var target = e.target;
 
         switch (target.id.substring(0, 13)) {
-            case "addAboveModal":
-                addRetrieve();
-                break;
             case "editAboveModa":
                 editRetrieve(target.id.substring(14));
                 break;
