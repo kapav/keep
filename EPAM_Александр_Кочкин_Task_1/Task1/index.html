@@ -14,16 +14,6 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12">
-                <form name="storeForm">
-                    <!--Имя товара для помещения в хранилище или редактирования.-->
-                    <input type="hidden" id="storeName" value="">
-                    <!--Количество товара для помещения в хранилище или редактирования.-->
-                    <input type="hidden" id="storeCount" value="">
-                    <!--Значение цены для помещения в хранилище или редактирования.-->
-                    <input type="hidden" id="storePrice" value="">
-                    <!--Корректность ввода.-->
-                    <input type="hidden" id="storePropriety" value="0">
-                </form>
                 <form name="changeForm">
                     <!-- Modal Начало модального окна изменения-->
                     <div id="changeModal" class="modal fade" role="dialog">
@@ -159,56 +149,57 @@
         </div>
     </div>
     <div>
-    <table class="table table-bordered">
-    <thead>
-    <tr>
-        <th class="col-lg-6 text-center">
-        <form name="toggleNameForm">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-lg-10 col-lg-push-1">
-                        Name
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th class="col-lg-6 text-center">
+                    <form name="toggleNameForm">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-lg-10 col-lg-push-1">
+                                    Name
+                                </div>
+                                <div class="col-lg-2">
+                                    <button id="toggleName" type="button" class="close">
+                                        <span class="glyphicon glyphicon-triangle-top"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </th>
+                <th class="col-lg-2 text-center">
+                    <form name="togglePriceForm">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-lg-10 col-lg-push-1">
+                                    Price
+                                </div>
+                                <div class="col-lg-2">
+                                    <button id="togglePrice" type="button" class="close">
+                                        <span class="glyphicon glyphicon-triangle-top"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </th>
+                <th class="col-lg-4 text-center">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                Actions
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-lg-2">
-                        <button id="toggleName" type="button" class="close">
-                            <span class="glyphicon glyphicon-triangle-top"></span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </form>
-        </th>
-        <th class="col-lg-2 text-center">
-        <form name="togglePriceForm">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-lg-10 col-lg-push-1">
-                        Price
-                    </div>
-                    <div class="col-lg-2">
-                        <button id="togglePrice" type="button" class="close">
-                            <span class="glyphicon glyphicon-triangle-top"></span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </form>
-        </th>
-        <th class="col-lg-4 text-center">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-lg-12">
-                        Actions
-                    </div>
-                </div>
-            </div>
-        </th>
-    </tr>
-    </thead>
-    <tbody id="tbodyElem">
-    </tbody>
-    </table>
+                </th>
+            </tr>
+            </thead>
+            <tbody id="tbodyElem">
+            </tbody>
+        </table>
     </div>
+    <script src="Scripts/App/config.js"></script>
     <script src="Scripts/App/main.js"></script>
     <script src="Scripts/App/verifyFilter.js"></script>
     <script src="Scripts/App/verifyChange.js"></script>

@@ -12,16 +12,10 @@
         flagName = false,
         flagCount = false,
         flagPrice = false,
-		storeName = document.forms.storeForm.storeName,
-        storeCount = document.forms.storeForm.storeCount,
-        storePrice = document.forms.storeForm.storePrice,
-        storePropriety = document.forms.storeForm.storePropriety,
-		changeBtnAboveModal = document.forms.filterAndAddForm.addAboveModal,
         changeName = document.forms.changeForm.changeName,
         changeCount = document.forms.changeForm.changeCount,
         changePrice = document.forms.changeForm.changePrice,
-        changeBtnInModal = document.forms.changeForm.changeInModal,
-        tbodyEdit = document.getElementById("tbodyElem");
+        changeBtnInModal = document.forms.changeForm.changeInModal;
 
 	changeBtnInModal.addEventListener("click", changeCheck);
 	document.addEventListener("click", tbodyClick);
@@ -44,7 +38,7 @@
         resetError(changeCount.parentElement);
         resetError(changePrice.parentElement);
         resetError(changeBtnInModal.parentElement);
-        storePropriety.value = 0;
+        appConfig.propriety = 0;
         flagName = flagCount = flagPrice = false;
 	}
 	
@@ -64,20 +58,20 @@
     function addPrepare() { // Очистка полей input при открытии модального окна.
 		resetErrorsProprietyAndFlags();
         changeName.value = changeCount.value = changePrice.value = "";
-        storeName.value = storeCount.value = storePrice.value = "";
+        appConfig.name = appConfig.count = appConfig.price = "";
 		addEventListenersToInputs();
     }
 
     function editPrepare() { // Заполнение полей input значениями из хранилища.
 		resetErrorsProprietyAndFlags();
-        changeName.value = storeName.value;
-        changeCount.value = storeCount.value;
-        changePrice.value = formatterUsdCur.format(+storePrice.value);
+		changeName.value = appConfig.name;
+		changeCount.value = appConfig.count;
+		changePrice.value = formatterUsdCur.format(+appConfig.price);
 		addEventListenersToInputs();
     }
 
-    function nameFormat(e) { // Проверка символов по одному.
-        var e = e || window.e,
+    function nameFormat(evt) { // Проверка символов по одному.
+        var e = evt || window.evt,
             code = e.charCode || e.keyCode,
             nameSymbol;
 
@@ -113,7 +107,7 @@
         } else if (!nameWildcard.test(nameText)) {
             showError(changeName.parentElement, "* Должно быть от 1 до 15 букв, цифр или спецсимволов");
         } else {
-            storeName.value = nameText;
+            appConfig.name = nameText;
             changeName.value = nameText;
             flagName = true;
             proprietyControl();
@@ -126,8 +120,8 @@
         e.preventDefault();
     }
 
-    function countFormat(e) { // Проверка символов на цифры по одному.
-        var e = e || window.e,
+    function countFormat(evt) { // Проверка символов на цифры по одному.
+        var e = evt || window.evt,
             code = e.charCode || e.keyCode,
             countSymbol;
 
@@ -167,7 +161,7 @@
             changeCount.value = 0;
             showError(changeCount.parentElement, "* Введён ноль. Повторите ввод");
         } else {
-            storeCount.value = countNumber;
+            appConfig.count = countNumber;
             changeCount.value = countNumber;
             flagCount = true;
             proprietyControl();
@@ -180,8 +174,8 @@
         e.preventDefault();
     }
 
-    function priceFormat(e) { // Проверка символов по одному.
-        var e = e || window.e,
+    function priceFormat(evt) { // Проверка символов по одному.
+        var e = evt || window.evt,
             code = e.charCode || e.keyCode,
             priceSymbol;
 
@@ -205,8 +199,8 @@
     }
 
     function priceRegain() { // Восстановление отображения цены при получении фокуса.
-        if (storePrice.value) {
-            changePrice.value = storePrice.value;
+        if (appConfig.price) {
+            changePrice.value = appConfig.price;
         }
     }
 
@@ -229,7 +223,7 @@
             changePrice.value = 0;
             showError(changePrice.parentElement, "* Введён ноль. Повторите ввод");
         } else {
-            storePrice.value = Math.round(priceNumber * 100) / 100;
+            appConfig.price = Math.round(priceNumber * 100) / 100;
             changePrice.value = formatterUsdCur.format(priceNumber);
             flagPrice = true;
             proprietyControl();
@@ -243,13 +237,12 @@
     }
 
     function changeCheck(e) { // Проверка корректности ввода.
-        var correctness = +storePropriety.value;
         resetError(changeBtnInModal.parentElement);
         nameCheck();
         countCheck();
         priceRegain();
         priceCheck();
-        if (!correctness) {
+        if (!+appConfig.propriety) {
             showError(changeBtnInModal.parentElement, "* Заполните поля правильно");
             e.preventDefault();
             e.stopPropagation();
@@ -258,7 +251,7 @@
 
     function proprietyControl() { // Проверка корректности ввода.
         if (flagName && flagCount && flagPrice) {
-            storePropriety.value = 1;
+            appConfig.propriety = 1;
         }
     }
 

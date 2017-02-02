@@ -17,7 +17,6 @@
 		dbBtnInModal = document.forms.changeForm.changeInModal,
 		toggleName = document.forms.toggleNameForm.toggleName,
 		togglePrice = document.forms.togglePriceForm.togglePrice,
-        storeForm = document.forms.storeForm,
         tbodyDb = document.getElementById("tbodyElem");
 
     window.addEventListener("load", displayDb);
@@ -131,9 +130,9 @@
     function editRetrieve(prodId) { // Извлекает из хранилища сведения о товаре.
         prodIndex = getIndex(prodStorage, +prodId);
         if (prodIndex !== -1) {
-            storeForm.storeName.value = prodStorage[prodIndex].name;
-            storeForm.storeCount.value = prodStorage[prodIndex].count;
-            storeForm.storePrice.value = prodStorage[prodIndex].price;
+            appConfig.name = prodStorage[prodIndex].name;
+            appConfig.count = prodStorage[prodIndex].count;
+            appConfig.price = prodStorage[prodIndex].price;
         }
 		dbBtnInModal.classList.remove("btn-primary");
 		dbBtnInModal.classList.add("btn-warning");
@@ -146,23 +145,25 @@
         if (spareElem) { spareElem.parentNode.removeChild(spareElem); }
 	}
 
-    function changePlace() { // Размещает отредактированные сведения о товаре в хранилище.
-		var prodObj = {},
-			priceRound;
-		if (+storeForm.storePropriety.value) {
-			prodObj.id = currentId;
-			prodObj.name = storeForm.storeName.value;
-			prodObj.count = +storeForm.storeCount.value;
-			priceRound = +storeForm.storePrice.value;
-			prodObj.price = Math.round(priceRound * 100) / 100;
-			prodStorage.push(prodObj);
-			currentId++;
-			if (+dbBtnInModal.dataset.isUpdate) {
-				prodStorage.splice(prodIndex, 1);
-			}
-			searchDb();
-			clearSpareElem();
-		}
+	function changePlace() { // Размещает отредактированные сведения о товаре в хранилище.
+	    setTimeout(function() {
+	        var prodObj = {},
+                priceRound;
+	        if (+appConfig.propriety) {
+	            prodObj.id = currentId;
+	            prodObj.name = appConfig.name;
+	            prodObj.count = +appConfig.count;
+	            priceRound = +appConfig.price;
+	            prodObj.price = Math.round(priceRound * 100) / 100;
+	            prodStorage.push(prodObj);
+	            currentId++;
+	            if (+dbBtnInModal.dataset.isUpdate) {
+	                prodStorage.splice(prodIndex, 1);
+	            }
+	            searchDb();
+	            clearSpareElem();
+	        }
+	    }, 0);
     }
 
     function dropRetrieve(prodId) { // Извлекает удаляемый товар.
