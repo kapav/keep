@@ -6,6 +6,13 @@
 
     btnFilterName.value = "";
 
+    $(btnFilterName)
+        .on({
+            keypress: filterFormat,
+            paste: filterDeny,
+            blur: filterCheck()
+        });
+
     function showError(container, errorMessage) { // Отобразить ошибку.
         var msgElem = document.createElement("span");
         msgElem.className = "error-msg";
@@ -54,8 +61,4 @@
         showError(btnFilterName.parentElement.parentElement.parentElement, "* Нельзя копировать из буфера обмена");
         e.preventDefault();
     }
-
-    btnFilterName.addEventListener("keypress", filterFormat);
-    btnFilterName.addEventListener("paste", filterDeny);
-    btnFilterName.addEventListener("blur", filterCheck);
 })();

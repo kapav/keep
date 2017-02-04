@@ -1,5 +1,8 @@
 ﻿; (function () {
-    var prodStorage = [
+    var glyphiconTopClass = "glyphicon glyphicon-triangle-top",
+        glyphiconBottomClass = "glyphicon glyphicon-triangle-bottom",
+        tbodyElem = "#tbodyElement",
+        prodStorage = [
             { id: 1, name: "Товар 1", count: 5, price: 12352.25 },
             { id: 2, name: "Товар 2", count: 15, price: 12552.25 },
             { id: 3, name: "Товар 3", count: 150, price: 12452.25 }
@@ -18,13 +21,13 @@
 		dbBtnInModal = document.forms.changeForm.changeInModal,
 		toggleName = document.forms.toggleNameForm.toggleName,
 		togglePrice = document.forms.togglePriceForm.togglePrice,
-        tbodyDb = document.getElementById("tbodyElem");
+        tbodyDb = $(tbodyElem)[0];
 
-    window.addEventListener("load", searchDb);
-    dbBtnFilter.addEventListener("click", searchDb);
-    toggleName.addEventListener("click", sortingToggleName);
-    togglePrice.addEventListener("click", sortingTogglePrice);
-    dbBtnAdd.addEventListener("click", addRetrieve);
+    $(window).on("load", searchDb);
+    $(dbBtnFilter).on("click", searchDb);
+    $(toggleName).on("click", sortingToggleName);
+    $(togglePrice).on("click", sortingTogglePrice);
+    $(dbBtnAdd).on("click", addRetrieve);
 	dbBtnInModal.addEventListener("click", changePlace);
 	tbodyDb.addEventListener("click", tbodyClick);
 
@@ -57,9 +60,9 @@
         sortingName = !sortingName;
         if (sortingName) {
 			prodShow.reverse();
-			glyphiconToggleName.className = "glyphicon glyphicon-triangle-bottom";
+			glyphiconToggleName.className = glyphiconBottomClass;
 		} else {
-			glyphiconToggleName.className = "glyphicon glyphicon-triangle-top";
+            glyphiconToggleName.className = glyphiconTopClass;
 		}
         drawDb(prodShow);
     }
@@ -74,9 +77,9 @@
         sortingPrice = !sortingPrice;
         if (sortingPrice) {
 			prodShow.reverse();
-			glyphiconTogglePrice.className = "glyphicon glyphicon-triangle-bottom";
+			glyphiconTogglePrice.className = glyphiconBottomClass;
 		} else {
-			glyphiconTogglePrice.className = "glyphicon glyphicon-triangle-top";
+            glyphiconTogglePrice.className = glyphiconTopClass;
 		}
         drawDb(prodShow);
     }
@@ -153,8 +156,8 @@
     function dropRetrieve(prodId) { // Извлекает удаляемый товар.
         prodIndexInArray = getIndex(prodStorage, +prodId);
         dbBtnInModal = document.forms.dropForm.dropInModal;
-        dbBtnInModal.addEventListener("click", dropPlace);
         dbBtnInModal.dataset.prodIdInObj = prodId;
+        dbBtnInModal.addEventListener("click", dropPlace);
     }
 
     function dropPlace() { // Удаляет из хранилища объект товара, используя его индекс.

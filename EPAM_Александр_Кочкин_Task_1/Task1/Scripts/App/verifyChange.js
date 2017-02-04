@@ -1,14 +1,16 @@
-﻿; (function () {
+﻿;
+(function() {
     var controlCharMaxNum = 32,
-		firefoxFuncBtnNum = 0,
+        firefoxFuncBtnNum = 0,
         nameMask = /[a-zA-Zа-яА-ЯёЁ0-9 _,;:\\\/\-\.\+\*\(\)!@#\$%&={}\[\]\"\'\?<>№]/,
         nameWildcard = /^[a-zA-Zа-яА-ЯёЁ0-9 _,;:\\\/\-\.\+\*\(\)!@#\$%&={}\[\]\"\'\?<>№]{1,15}$/,
         countMask = /[\d]/,
         priceMask = /[\d\.]/,
-		formatterUsdCur = new Intl.NumberFormat("en-US", {
-		  style: "currency",
-		  currency: "USD"
-		}),
+        formatterUsdCur = new Intl.NumberFormat("en-US",
+        {
+            style: "currency",
+            currency: "USD"
+        }),
         flagName = false,
         flagCount = false,
         flagPrice = false,
@@ -16,14 +18,33 @@
         changeName = document.forms.changeForm.changeName,
         changeCount = document.forms.changeForm.changeCount,
         changePrice = document.forms.changeForm.changePrice,
-        changeBtnInModal = document.forms.changeForm.changeInModal,
-        tbodyChange = document.getElementById("tbodyElem");
+        changeBtnInModal = document.forms.changeForm.changeInModal;
 
-    btnAdd.addEventListener("click", addPrepare);
-	changeBtnInModal.addEventListener("click", changeCheck);
-	tbodyChange.addEventListener("click", tbodyClick);
-	
-    function showError(container, errorMessage) { // Отобразить ошибку.
+    $(btnAdd).on("click", addPrepare);
+    $(changeBtnInModal).on("click", changeCheck);
+    $("#tbodyElement").on("click", tbodyClick);
+
+    $(changeName)
+        .on({
+            keypress: nameFormat,
+            paste: nameDeny,
+            blur: nameCheck
+        });
+    $(changeCount)
+        .on({
+            keypress: countFormat,
+            paste: countDeny,
+            blur: countCheck
+        });
+    $(changePrice)
+        .on({
+            focus: priceRegain,
+            keypress: priceFormat,
+            paste: priceDeny,
+            blur: priceCheck
+        });
+
+	function showError(container, errorMessage) { // Отобразить ошибку.
         var msgElem = document.createElement("span");
         msgElem.className = "error-msg";
         msgElem.innerHTML = errorMessage;
@@ -45,24 +66,10 @@
         flagName = flagCount = flagPrice = false;
 	}
 	
-	function addEventListenersToInputs() {
-		changeName.addEventListener("keypress", nameFormat);
-		changeName.addEventListener("paste", nameDeny);
-		changeName.addEventListener("blur", nameCheck);
-		changeCount.addEventListener("keypress", countFormat);
-		changeCount.addEventListener("paste", countDeny);
-		changeCount.addEventListener("blur", countCheck);
-		changePrice.addEventListener("focus", priceRegain);
-		changePrice.addEventListener("keypress", priceFormat);
-		changePrice.addEventListener("paste", priceDeny);
-		changePrice.addEventListener("blur", priceCheck);
-	}
-
     function addPrepare() { // Очистка полей input при открытии модального окна.
 		resetErrorsProprietyAndFlags();
         changeName.value = changeCount.value = changePrice.value = "";
         appConfig.name = appConfig.count = appConfig.price = "";
-		addEventListenersToInputs();
     }
 
     function editPrepare() { // Заполнение полей input значениями из хранилища.
@@ -71,7 +78,6 @@
             changeName.value = appConfig.name;
             changeCount.value = appConfig.count;
             changePrice.value = formatterUsdCur.format(+appConfig.price);
-            addEventListenersToInputs();
         }, 0);
     }
 

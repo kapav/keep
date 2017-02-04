@@ -36,7 +36,7 @@
                                         <div class="container-fluid">
                                             <div class="row">
                                                 <div class="col-lg-6">
-                                                    <input type="text" class="form-control" id="changeName" placeholder="Имя товара" autofocus />
+                                                    <input type="text" class="form-control" id="changeName" name="changeName" placeholder="Имя товара" autofocus />
                                                 </div>
                                                 <div class="col-lg-6">
                                                     <p class="form-control-static">
@@ -57,7 +57,7 @@
                                         <div class="container-fluid">
                                             <div class="row">
                                                 <div class="col-lg-3">
-                                                    <input type="text" class="form-control" id="changeCount" placeholder="Количество" />
+                                                    <input type="text" class="form-control" id="changeCount" name="changeCount" placeholder="Количество" />
                                                 </div>
                                             </div>
                                         </div>
@@ -73,7 +73,7 @@
                                         <div class="container-fluid">
                                             <div class="row">
                                                 <div class="col-lg-6">
-                                                    <input type="text" class="form-control" id="changePrice" placeholder="Цена товара" />
+                                                    <input type="text" class="form-control" id="changePrice" name="changePrice" placeholder="Цена товара" />
                                                 </div>
                                             </div>
                                         </div>
@@ -135,7 +135,7 @@
 		<form name="filterAndAddForm">
             <div class="col-lg-5">
                 <!--Значение для фильтрации-->
-                <input type="text" class="form-control input-lg" id="filterName" placeholder="Фильтр по подстроке с именем товара" value=""/>
+                <input type="text" class="form-control input-lg" name="filterName" placeholder="Фильтр по подстроке с именем товара" value=""/>
             </div>
 		    <div class="col-lg-2">
 		        <!--Кнопка поиска-->
@@ -195,7 +195,7 @@
                 </th>
             </tr>
             </thead>
-            <tbody id="tbodyElem">
+            <tbody id="tbodyElement">
             </tbody>
         </table>
     </div>
