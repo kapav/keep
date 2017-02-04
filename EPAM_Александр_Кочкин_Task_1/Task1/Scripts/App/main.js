@@ -10,37 +10,37 @@
 		  currency: "USD"
 		}),
         currentId = 4,
-        prodIndex = -1,
+        prodIndexInArray = -1,
         sortingName = false,
         sortingPrice = false,
-		dbBtnFilter = document.forms.filterAndAddForm.filterAboveModal,
-        dbBtnAboveModal = document.forms.filterAndAddForm.addAboveModal,
+		dbBtnFilter = document.forms.filterAndAddForm.filterProduct,
+        dbBtnAdd = document.forms.filterAndAddForm.addProduct,
 		dbBtnInModal = document.forms.changeForm.changeInModal,
 		toggleName = document.forms.toggleNameForm.toggleName,
 		togglePrice = document.forms.togglePriceForm.togglePrice,
         tbodyDb = document.getElementById("tbodyElem");
 
-    window.addEventListener("load", displayDb);
+    window.addEventListener("load", searchDb);
     dbBtnFilter.addEventListener("click", searchDb);
     toggleName.addEventListener("click", sortingToggleName);
     togglePrice.addEventListener("click", sortingTogglePrice);
-    dbBtnAboveModal.addEventListener("click", addRetrieve);
+    dbBtnAdd.addEventListener("click", addRetrieve);
 	dbBtnInModal.addEventListener("click", changePlace);
 	tbodyDb.addEventListener("click", tbodyClick);
 
-    function drawDb(prodRow) { // Отрисовывает сведения о товарах.
+	function drawDb(prodArray) { // Отрисовывает сведения о товарах.
+	    var tableRows = document.createDocumentFragment();
         tbodyDb.innerHTML = "";
-        prodRow.forEach(displayBlock);
-    }
-
-	function displayDb() { // Отображение перечня товаров.
-		prodShow = prodStorage;
-		drawDb(prodShow);
+        prodArray.forEach(appendTableRow, tableRows);
+	    tbodyDb.appendChild(tableRows);
 	}
-	
+
 	function searchDb() { // Фильтрация по имени товара.
 	    var dbFilter = document.forms.filterAndAddForm.filterName,
 	        dbFilterUpperCase = dbFilter.value.toUpperCase();
+        if ( (!dbFilter.value.trim()) && (prodShow.length === prodStorage.length) ) {
+            return;
+        }
         prodShow = prodStorage.filter(function (prod) {
             return prod.name.slice(0, dbFilter.value.length).toUpperCase() === dbFilterUpperCase;
         });
@@ -81,36 +81,19 @@
         drawDb(prodShow);
     }
 
-    function displayBlock(prod) { // Отрисовывает элемент tr - строку перечня.
+    function appendTableRow(prod) { // Отрисовывает элемент tr - строку перечня.
         var innerBlock = document.getElementById("rowBlock").innerHTML,
-            trElemBlock = document.createElement("tr"),
-            rowName = "rowName" + prod.id,
-            rowPrice = "rowPrice" + prod.id,
-            rowAction = "rowAction" + prod.id;
-        trElemBlock.innerHTML = innerBlock;
+            trElem = document.createElement("tr");
+        trElem.id = "row" + prod.id;
+        trElem.innerHTML = innerBlock;
 
-        trElemBlock.getElementsByClassName("rowName")[0].name = rowName;
-        trElemBlock.getElementsByClassName("rowPrice")[0].name = rowPrice;
-        trElemBlock.getElementsByClassName("rowAction")[0].name = rowAction;
-		
-        tbodyDb.appendChild(trElemBlock);
+        trElem.querySelector("a.prodName").innerHTML = prod.name;
+        trElem.querySelector("span.prodCount").innerHTML = prod.count;
+        trElem.querySelector("div.prodPrice").innerHTML = formatterUsdCur.format(prod.price);
+        trElem.querySelector("button.editForModal").id = "editProduct" + prod.id;
+        trElem.querySelector("button.dropForModal").id = "dropProduct" + prod.id;
 
-        document.forms[rowName].querySelector("a").innerHTML = prod.name;
-        document.forms[rowName].querySelector("span").innerHTML = prod.count;
-        document.forms[rowPrice].querySelector("div").innerHTML = formatterUsdCur.format(prod.price);
-
-        for (var i = 0; i < document.forms[rowAction].elements.length; i++) {
-            switch (document.forms[rowAction].elements[i].name) {
-                case "#editAboveModal":
-                    document.forms[rowAction].elements[i].id = "editAboveModal" + prod.id;
-                    break;
-                case "#dropAboveModal":
-                    document.forms[rowAction].elements[i].id = "dropAboveModal" + prod.id;
-                    break;
-                default:
-                    break;
-            }
-        }
+        this.appendChild(trElem);
     }
 
     function getIndex(prodArr, prodId) { // Возвращает индекс товара в массиве по id товара.
@@ -129,28 +112,25 @@
 		dbBtnInModal.dataset.isUpdate = "0";
 	}
 	
-    function editRetrieve(prodId) { // Извлекает из хранилища сведения о товаре.
-        prodIndex = getIndex(prodStorage, +prodId);
-        if (prodIndex !== -1) {
-            appConfig.name = prodStorage[prodIndex].name;
-            appConfig.count = prodStorage[prodIndex].count;
-            appConfig.price = prodStorage[prodIndex].price;
+	function editRetrieve(prodId) { // Извлекает из хранилища сведения о товаре.
+        prodIndexInArray = getIndex(prodStorage, +prodId);
+        if (prodIndexInArray !== -1) {
+            appConfig.name = prodStorage[prodIndexInArray].name;
+            appConfig.count = prodStorage[prodIndexInArray].count;
+            appConfig.price = prodStorage[prodIndexInArray].price;
         }
 		dbBtnInModal.classList.remove("btn-primary");
 		dbBtnInModal.classList.add("btn-warning");
 		dbBtnInModal.innerHTML = "Update";
 		dbBtnInModal.dataset.isUpdate = "1";
-    }
-	
-	function clearSpareElem() {
-        var spareElem = document.querySelector("div.modal-backdrop.fade.in");
-        if (spareElem) { spareElem.parentNode.removeChild(spareElem); }
+	    dbBtnInModal.dataset.prodIdInObj = prodId;
 	}
-
+	
 	function changePlace() { // Размещает отредактированные сведения о товаре в хранилище.
 	    setTimeout(function() {
 	        var prodObj = {},
-                priceRound;
+                priceRound,
+	            changeTrElem;
 	        if (+appConfig.propriety) {
 	            prodObj.id = currentId;
 	            prodObj.name = appConfig.name;
@@ -158,37 +138,41 @@
 	            priceRound = +appConfig.price;
 	            prodObj.price = Math.round(priceRound * 100) / 100;
 	            prodStorage.push(prodObj);
+	            appendTableRow.call(tbodyDb, prodObj);
 	            currentId++;
 	            if (+dbBtnInModal.dataset.isUpdate) {
-	                prodStorage.splice(prodIndex, 1);
+	                prodStorage.splice(prodIndexInArray, 1);
+	                changeTrElem = document.getElementById("row" + dbBtnInModal.dataset.prodIdInObj);
+	                changeTrElem.parentElement.removeChild(changeTrElem);
 	            }
-	            searchDb();
-	            clearSpareElem();
+	            prodShow = prodStorage;
 	        }
 	    }, 0);
     }
 
     function dropRetrieve(prodId) { // Извлекает удаляемый товар.
-        prodIndex = getIndex(prodStorage, +prodId);
+        prodIndexInArray = getIndex(prodStorage, +prodId);
         dbBtnInModal = document.forms.dropForm.dropInModal;
-		dbBtnInModal.addEventListener("click", dropPlace);
+        dbBtnInModal.addEventListener("click", dropPlace);
+        dbBtnInModal.dataset.prodIdInObj = prodId;
     }
 
     function dropPlace() { // Удаляет из хранилища объект товара, используя его индекс.
-        prodStorage.splice(prodIndex, 1);
-        searchDb();
-		clearSpareElem();
+        var dropTrElem = document.getElementById("row" + dbBtnInModal.dataset.prodIdInObj);;
+        prodStorage.splice(prodIndexInArray, 1);
+        dropTrElem.parentElement.removeChild(dropTrElem);
+        prodShow = prodStorage;
     }
 
     function tbodyClick(e) { // Кнопки редактирования или удаления.
         var target = e.target;
 
-        switch (target.id.substring(0, 13)) {
-            case "editAboveModa":
-                editRetrieve(target.id.substring(14));
+        switch (target.id.substring(0, 11)) {
+            case "editProduct":
+                editRetrieve(target.id.substring(11));
                 break;
-            case "dropAboveModa":
-                dropRetrieve(target.id.substring(14));
+            case "dropProduct":
+                dropRetrieve(target.id.substring(11));
                 break;
             default:
                 break;

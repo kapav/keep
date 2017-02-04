@@ -12,14 +12,14 @@
         flagName = false,
         flagCount = false,
         flagPrice = false,
-        addBtnAboveModal = document.forms.filterAndAddForm.addAboveModal,
+        btnAdd = document.forms.filterAndAddForm.addProduct,
         changeName = document.forms.changeForm.changeName,
         changeCount = document.forms.changeForm.changeCount,
         changePrice = document.forms.changeForm.changePrice,
         changeBtnInModal = document.forms.changeForm.changeInModal,
         tbodyChange = document.getElementById("tbodyElem");
 
-    addBtnAboveModal.addEventListener("click", addPrepare);
+    btnAdd.addEventListener("click", addPrepare);
 	changeBtnInModal.addEventListener("click", changeCheck);
 	tbodyChange.addEventListener("click", tbodyClick);
 	
@@ -263,7 +263,7 @@
     function tbodyClick(e) { // Обработка нажатия на кнопку редактирования.
         var target = e.target;
 		
-        if (target.id.substring(0, 14) === "editAboveModal") {
+        if (target.id.substring(0, 11) === "editProduct") {
             editPrepare();
         }
     }

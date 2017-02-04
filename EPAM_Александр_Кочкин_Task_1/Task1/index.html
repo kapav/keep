@@ -83,7 +83,7 @@
                                     <div class="container-fluid">
                                         <div class="row">
                                             <div class="col-lg-4">
-                                                <button type="button" id="changeInModal" class="btn btn-primary btn-lg btn-block" data-dismiss="modal" data-is-update="0">Add</button>
+                                                <button type="button" id="changeInModal" class="btn btn-primary btn-lg btn-block" data-dismiss="modal" data-is-update="0" data-prod-id-in-obj="0">Add</button>
                                             </div>
                                         </div>
                                     </div>
@@ -134,16 +134,16 @@
         <div class="row row-above-table">
 		<form name="filterAndAddForm">
             <div class="col-lg-5">
-                <!--Значение для фильтрации по имени товара.-->
+                <!--Значение для фильтрации-->
                 <input type="text" class="form-control input-lg" id="filterName" placeholder="Фильтр по подстроке с именем товара" value=""/>
             </div>
 		    <div class="col-lg-2">
-		        <!--Кнопка поиска над модальным-->
-		        <button type="button" class="btn btn-default btn-lg btn-block" id="filterAboveModal">Search</button>
+		        <!--Кнопка поиска-->
+		        <button type="button" class="btn btn-default btn-lg btn-block" id="filterProduct">Search</button>
 		    </div>
             <div class="col-lg-offset-2 col-lg-3">
-                <!--Кнопка добавления над модальным-->
-                <button type="button" class="btn btn-primary btn-lg btn-block" id="addAboveModal" data-toggle="modal" data-target="#changeModal" data-backdrop="static">Add New</button>
+                <!--Кнопка добавления-->
+                <button type="button" class="btn btn-primary btn-lg btn-block" id="addProduct" data-toggle="modal" data-target="#changeModal" data-backdrop="static">Add New</button>
             </div>
         </form>
         </div>
@@ -208,16 +208,14 @@
         <td>
             <div class="container-fluid">
                 <div class="row">
-                    <form name="rowName" class="rowName">
                     <div class="col-lg-10">
                         <!--Имя товара-->
-                        <a href="#" name="prodName">Товар 1</a>
+                        <a href="#" name="prodName" class="prodName">Товар 1</a>
                     </div>
                     <div class="col-lg-2 text-right">
                         <!--Количество товара-->
-                        <span name="prodCount" class="badge">5</span>
+                        <span name="prodCount" class="badge prodCount">5</span>
                     </div>
-                    </form>
                 </div>
             </div>
         </td>
@@ -225,39 +223,25 @@
             <div class="container-fluid">
                 <div class="row">
                     <!--Отображаемая цена, взятая из хранилища.-->
-                    <form name="rowPrice" class="rowPrice">
-                    <div name="prodPrice" class="col-lg-12">
+                    <div name="prodPrice" class="col-lg-12 prodPrice">
                         $12,35
                     </div>
-                    </form>
                 </div>
             </div>
         </td>
         <td>
-		<form name="rowAction" class="rowAction">
             <div class="container-fluid">
                 <div class="row">
                     <!--Редактирование товара-->
                     <div class="col-lg-6">
-                        <!--Кнопка редактирования над модальным-->
-                        <button type="button" name="#editAboveModal" class="btn btn-warning btn-lg btn-block" data-toggle="modal" data-backdrop="static" data-target="#changeModal">Edit</button>
-                        
-                        <!-- Modal Начало модального окна редактирования-->
-                        <!-- Modal end -->
-                        
+                        <button type="button" name="#editForModal" class="btn btn-warning btn-lg btn-block editForModal" data-toggle="modal" data-backdrop="static" data-target="#changeModal">Edit</button>
                     </div>
                     <!--Удаление товара-->
                     <div class="col-lg-6">
-                        <!--Кнопка удаления над модальным-->
-                        <button type="button" name="#dropAboveModal" class="btn btn-danger btn-lg btn-block" data-toggle="modal" data-backdrop="static" data-target="#dropModal">Delete</button>
-
-                        <!-- Modal Начало модального окна удаления-->
-                        <!-- Modal end -->
-
+                        <button type="button" name="#dropForModal" class="btn btn-danger btn-lg btn-block dropForModal" data-toggle="modal" data-backdrop="static" data-target="#dropModal">Delete</button>
                     </div>
                 </div>
             </div>
-		</form>
         </td>
     </script>
 </body>
