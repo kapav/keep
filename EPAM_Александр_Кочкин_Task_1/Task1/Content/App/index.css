@@ -2,12 +2,12 @@
     color: #f00;
 }
 
-span.error-msg + div > div > input:focus {
+form.data-paint-red input:focus {
     color: #f00;
     border-color: #f00;
 }
 
-span.error-msg + input, span.error-msg + input:focus {
+input.data-paint-red, input.data-paint-red:focus {
     color: #f00;
     border-color: #f00;
 }

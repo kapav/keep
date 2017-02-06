@@ -1,7 +1,8 @@
 ﻿; (function () {
     var glyphiconTopClass = "glyphicon glyphicon-triangle-top",
         glyphiconBottomClass = "glyphicon glyphicon-triangle-bottom",
-        tbodyElem = "#tbodyElement",
+        primaryButtonStyle = "btn-primary",
+        warningButtonStyle = "btn-warning",
         prodStorage = [
             { id: 1, name: "Товар 1", count: 5, price: 12352.25 },
             { id: 2, name: "Товар 2", count: 15, price: 12552.25 },
@@ -21,21 +22,21 @@
 		dbBtnInModal = document.forms.changeForm.changeInModal,
 		toggleName = document.forms.toggleNameForm.toggleName,
 		togglePrice = document.forms.togglePriceForm.togglePrice,
-        tbodyDb = $(tbodyElem)[0];
+        tbodyDb = $("#tbodyElement")[0];
 
     $(window).on("load", searchDb);
-    $(dbBtnFilter).on("click", searchDb);
-    $(toggleName).on("click", sortingToggleName);
-    $(togglePrice).on("click", sortingTogglePrice);
-    $(dbBtnAdd).on("click", addRetrieve);
-	dbBtnInModal.addEventListener("click", changePlace);
-	tbodyDb.addEventListener("click", tbodyClick);
+    $(dbBtnFilter).click(searchDb);
+    $(toggleName).click(sortingToggle);
+    $(togglePrice).click(sortingToggle);
+    $(dbBtnAdd).click(addRetrieve);
+    $(dbBtnInModal).click(changePlace);
+    $(tbodyDb).click(tbodyClick);
 
 	function drawDb(prodArray) { // Отрисовывает сведения о товарах.
 	    var tableRows = document.createDocumentFragment();
-        tbodyDb.innerHTML = "";
+        $(tbodyDb).empty();
         prodArray.forEach(appendTableRow, tableRows);
-	    tbodyDb.appendChild(tableRows);
+	    $(tbodyDb).append(tableRows);
 	}
 
 	function searchDb() { // Фильтрация по имени товара.
@@ -50,45 +51,42 @@
         drawDb(prodShow);
     }
 
-    function sortingToggleName() { // Меняет направление сортировки по имени.
-        var glyphiconToggleName = toggleName.firstElementChild;
-        if (!prodShow) prodShow = prodStorage;
-		prodShow.sort(function (prodA, prodB) {
-            if (prodA.name.toUpperCase() < prodB.name.toUpperCase()) return -1;
-            return 1;
-        }); 
-        sortingName = !sortingName;
-        if (sortingName) {
-			prodShow.reverse();
-			glyphiconToggleName.className = glyphiconBottomClass;
-		} else {
-            glyphiconToggleName.className = glyphiconTopClass;
-		}
-        drawDb(prodShow);
-    }
-
-    function sortingTogglePrice() { // Меняет направление сортировки по цене.
-        var glyphiconTogglePrice = togglePrice.firstElementChild;
-        if (!prodShow) prodShow = prodStorage;
-        prodShow.sort(function (prodA, prodB) {
-            if (prodA.price < prodB.price) return -1;
-            return 1;
-        });
-        sortingPrice = !sortingPrice;
-        if (sortingPrice) {
-			prodShow.reverse();
-			glyphiconTogglePrice.className = glyphiconBottomClass;
-		} else {
-            glyphiconTogglePrice.className = glyphiconTopClass;
-		}
-        drawDb(prodShow);
-    }
+	function sortingToggle() { // Меняет направление сортировки по цене.
+	    var glyphiconToggle = this.firstElementChild,
+	        sortingFeature,
+	        sortingFunc = function (prodA, prodB) {
+	            return prodA.name.toUpperCase() < prodB.name.toUpperCase() ? -1 : 1;
+	        };
+	    if (!prodShow) prodShow = prodStorage;
+	    switch (this.id) {
+	        case "toggleName":
+	            sortingName = !sortingName;
+	            sortingFeature = sortingName;
+	            break;
+	        case "togglePrice":
+	            sortingFunc = function(prodA, prodB) {
+	                return prodA.price < prodB.price ? -1 : 1;
+	            };
+	            sortingPrice = !sortingPrice;
+	            sortingFeature = sortingPrice;
+	        default:
+                break;
+	    }
+	    prodShow.sort(sortingFunc);
+	    if (sortingFeature) {
+	        prodShow.reverse();
+	        glyphiconToggle.className = glyphiconBottomClass;
+	    } else {
+	        glyphiconToggle.className = glyphiconTopClass;
+	    }
+	    drawDb(prodShow);
+	}
 
     function appendTableRow(prod) { // Отрисовывает элемент tr - строку перечня.
         var innerBlock = document.getElementById("rowBlock").innerHTML,
             trElem = document.createElement("tr");
         trElem.id = "row" + prod.id;
-        trElem.innerHTML = innerBlock;
+        $(trElem).html(innerBlock);
 
         trElem.querySelector("a.prodName").innerHTML = prod.name;
         trElem.querySelector("span.prodCount").innerHTML = prod.count;
@@ -96,22 +94,20 @@
         trElem.querySelector("button.editForModal").id = "editProduct" + prod.id;
         trElem.querySelector("button.dropForModal").id = "dropProduct" + prod.id;
 
-        this.appendChild(trElem);
+        $(this).append(trElem);
     }
 
-    function getIndex(prodArr, prodId) { // Возвращает индекс товара в массиве по id товара.
-        for (var i = 0; i < prodArr.length; i++) {
-            if (prodArr[i].id === prodId) {
-                return i;
-            }
+    function getIndex(prodArray, prodId) { // Возвращает индекс товара.
+        for (var i = 0; i < prodArray.length; i++) {
+            if (prodArray[i].id === prodId) { return i; }
         }
         return -1;
     }
 
 	function addRetrieve() { // Подготавливает добавление товара.
-		dbBtnInModal.classList.remove("btn-warning");
-		dbBtnInModal.classList.add("btn-primary");
-		dbBtnInModal.innerHTML = "Add";
+	    $(dbBtnInModal).removeClass(warningButtonStyle);
+		$(dbBtnInModal).addClass(primaryButtonStyle);
+		$(dbBtnInModal).html("Add");
 		dbBtnInModal.dataset.isUpdate = "0";
 	}
 	
@@ -122,9 +118,9 @@
             appConfig.count = prodStorage[prodIndexInArray].count;
             appConfig.price = prodStorage[prodIndexInArray].price;
         }
-		dbBtnInModal.classList.remove("btn-primary");
-		dbBtnInModal.classList.add("btn-warning");
-		dbBtnInModal.innerHTML = "Update";
+        $(dbBtnInModal).removeClass(primaryButtonStyle);
+        $(dbBtnInModal).addClass(warningButtonStyle);
+		$(dbBtnInModal).html("Update");
 		dbBtnInModal.dataset.isUpdate = "1";
 	    dbBtnInModal.dataset.prodIdInObj = prodId;
 	}
@@ -146,7 +142,7 @@
 	            if (+dbBtnInModal.dataset.isUpdate) {
 	                prodStorage.splice(prodIndexInArray, 1);
 	                changeTrElem = document.getElementById("row" + dbBtnInModal.dataset.prodIdInObj);
-	                changeTrElem.parentElement.removeChild(changeTrElem);
+	                $(changeTrElem).remove();
 	            }
 	            prodShow = prodStorage;
 	        }
@@ -157,13 +153,13 @@
         prodIndexInArray = getIndex(prodStorage, +prodId);
         dbBtnInModal = document.forms.dropForm.dropInModal;
         dbBtnInModal.dataset.prodIdInObj = prodId;
-        dbBtnInModal.addEventListener("click", dropPlace);
+        $(dbBtnInModal).click(dropPlace);
     }
 
-    function dropPlace() { // Удаляет из хранилища объект товара, используя его индекс.
-        var dropTrElem = document.getElementById("row" + dbBtnInModal.dataset.prodIdInObj);;
+    function dropPlace() { // Удаляет из хранилища объект товара.
+        var dropTrElem = document.getElementById("row" + dbBtnInModal.dataset.prodIdInObj);
         prodStorage.splice(prodIndexInArray, 1);
-        dropTrElem.parentElement.removeChild(dropTrElem);
+        $(dropTrElem).remove();
         prodShow = prodStorage;
     }
 
@@ -181,4 +177,4 @@
                 break;
         }
     }
-})();
+}());

@@ -15,14 +15,16 @@
         flagCount = false,
         flagPrice = false,
         btnAdd = document.forms.filterAndAddForm.addProduct,
-        changeName = document.forms.changeForm.changeName,
-        changeCount = document.forms.changeForm.changeCount,
-        changePrice = document.forms.changeForm.changePrice,
-        changeBtnInModal = document.forms.changeForm.changeInModal;
+        changeForm = document.forms.changeForm,
+        changeName = changeForm.changeName,
+        changeCount = changeForm.changeCount,
+        changePrice = changeForm.changePrice,
+        changeBtnInModal = changeForm.changeInModal,
+        tbodyChange = $("#tbodyElement")[0];
 
-    $(btnAdd).on("click", addPrepare);
-    $(changeBtnInModal).on("click", changeCheck);
-    $("#tbodyElement").on("click", tbodyClick);
+    $(btnAdd).click(addPrepare);
+    $(changeBtnInModal).click(changeCheck);
+    $(tbodyChange).click(tbodyClick);
 
     $(changeName)
         .on({
@@ -44,24 +46,10 @@
             blur: priceCheck
         });
 
-	function showError(container, errorMessage) { // Отобразить ошибку.
-        var msgElem = document.createElement("span");
-        msgElem.className = "error-msg";
-        msgElem.innerHTML = errorMessage;
-        container.insertBefore(msgElem, container.firstChild);
-    }
-
-    function resetError(container) { // Сбросить ошибку.
-        if (container.firstChild.className === "error-msg") {
-            container.removeChild(container.firstChild);
-        }
-    }
-	
 	function resetErrorsProprietyAndFlags() {
-        resetError(changeName.parentElement);
-        resetError(changeCount.parentElement);
-        resetError(changePrice.parentElement);
-        resetError(changeBtnInModal.parentElement);
+        appConfig.resetError(changeName);
+        appConfig.resetError(changeCount);
+        appConfig.resetError(changePrice);
         appConfig.propriety = 0;
         flagName = flagCount = flagPrice = false;
 	}
@@ -86,7 +74,7 @@
             code = e.charCode || e.keyCode,
             nameSymbol;
 
-        resetError(changeName.parentElement);
+        appConfig.resetError(changeName);
         if (code < controlCharMaxNum ||
 			e.charCode === firefoxFuncBtnNum ||
 			e.ctrlKey || e.altKey) {
@@ -95,9 +83,9 @@
         nameSymbol = String.fromCharCode(code);
 
         if (!nameMask.test(nameSymbol)) {
-            showError(changeName.parentElement, "* Введите буквы, цифры или спецсимволы");
+            appConfig.showError(changeName, "* Введите буквы, цифры или спецсимволы");
         } else if (changeName.value.length >= 15) {
-            showError(changeName.parentElement, "* Имя должно быть от 1 до 15 символов");
+            appConfig.showError(changeName, "* Имя должно быть от 1 до 15 символов");
         } else {
             return;
         }
@@ -111,12 +99,12 @@
             emptyName = true;
         }
 
-        resetError(changeName.parentElement);
+        appConfig.resetError(changeName);
 
         if (emptyName) {
-            showError(changeName.parentElement, "* Поле не может быть пустым или из одних пробелов");
+            appConfig.showError(changeName, "* Поле не может быть пустым или из одних пробелов");
         } else if (!nameWildcard.test(nameText)) {
-            showError(changeName.parentElement, "* Должно быть от 1 до 15 букв, цифр или спецсимволов");
+            appConfig.showError(changeName, "* Должно быть от 1 до 15 букв, цифр или спецсимволов");
         } else {
             appConfig.name = nameText;
             changeName.value = nameText;
@@ -126,8 +114,8 @@
     }
 
     function nameDeny(e) { // Запрещение копирования из буфера обмена.
-        resetError(changeName.parentElement);
-        showError(changeName.parentElement, "* Нельзя копировать из буфера обмена");
+        appConfig.resetError(changeName);
+        appConfig.showError(changeName, "* Нельзя копировать из буфера обмена");
         e.preventDefault();
     }
 
@@ -136,7 +124,7 @@
             code = e.charCode || e.keyCode,
             countSymbol;
 
-        resetError(changeCount.parentElement);
+        appConfig.resetError(changeCount);
         if (code < controlCharMaxNum ||
 			e.charCode === firefoxFuncBtnNum ||
 			e.ctrlKey || e.altKey) {
@@ -145,9 +133,9 @@
         countSymbol = String.fromCharCode(code);
 
         if (!countMask.test(countSymbol)) {
-            showError(changeCount.parentElement, "* Нужно вводить цифры");
+            appConfig.showError(changeCount, "* Нужно вводить цифры");
         } else if (changeCount.value.length >= 15) {
-            showError(changeCount.parentElement, "* Количество должно быть от 1 до 15 цифр");
+            appConfig.showError(changeCount, "* Количество должно быть от 1 до 15 цифр");
         } else {
             return;
         }
@@ -162,15 +150,15 @@
         }
 
         countNumber = +countNumber; // Преобразование к числовому значению.
-        resetError(changeCount.parentElement);
+        appConfig.resetError(changeCount);
 
         if (emptyCount) {
-            showError(changeCount.parentElement, "* Введена пустая строка. Повторите ввод");
+            appConfig.showError(changeCount, "* Введена пустая строка. Повторите ввод");
         } else if (isNaN(countNumber)) {
-            showError(changeCount.parentElement, "* Введено не число. Повторите ввод");
+            appConfig.showError(changeCount, "* Введено не число. Повторите ввод");
         } else if (!countNumber) {
             changeCount.value = 0;
-            showError(changeCount.parentElement, "* Введён ноль. Повторите ввод");
+            appConfig.showError(changeCount, "* Введён ноль. Повторите ввод");
         } else {
             appConfig.count = countNumber;
             changeCount.value = countNumber;
@@ -180,8 +168,8 @@
     }
 
     function countDeny(e) { // Запрещение копирования из буфера обмена.
-        resetError(changeCount.parentElement);
-        showError(changeCount.parentElement, "* Нельзя копировать из буфера обмена");
+        appConfig.resetError(changeCount);
+        appConfig.showError(changeCount, "* Нельзя копировать из буфера обмена");
         e.preventDefault();
     }
 
@@ -190,7 +178,7 @@
             code = e.charCode || e.keyCode,
             priceSymbol;
 
-        resetError(changePrice.parentElement);
+        appConfig.resetError(changePrice);
         if (code < controlCharMaxNum ||
 			e.charCode === firefoxFuncBtnNum ||
 			e.ctrlKey || e.altKey) {
@@ -200,9 +188,9 @@
         priceSymbol = String.fromCharCode(code);
 
         if (!priceMask.test(priceSymbol)) {
-            showError(changePrice.parentElement, "* Введите цифры или десятичную точку");
+            appConfig.showError(changePrice, "* Введите цифры или десятичную точку");
         } else if (changePrice.value.length >= 15) {
-            showError(changePrice.parentElement, "* Цена должна содержать от 1 до 15 цифр или точку");
+            appConfig.showError(changePrice, "* Цена должна содержать от 1 до 15 цифр или точку");
         } else {
             return;
         }
@@ -223,16 +211,16 @@
             emptyPrice = true;
         }
 
-        resetError(changePrice.parentElement);
+        appConfig.resetError(changePrice);
         priceNumber = +priceNumber;
 
         if (emptyPrice) {
-            showError(changePrice.parentElement, "* Введена пустая строка. Повторите ввод");
+            appConfig.showError(changePrice, "* Введена пустая строка. Повторите ввод");
         } else if (isNaN(priceNumber)) {
-            showError(changePrice.parentElement, "* Введено не число. Повторите ввод");
+            appConfig.showError(changePrice, "* Введено не число. Повторите ввод");
         } else if (!priceNumber) {
             changePrice.value = 0;
-            showError(changePrice.parentElement, "* Введён ноль. Повторите ввод");
+            appConfig.showError(changePrice, "* Введён ноль. Повторите ввод");
         } else {
             appConfig.price = Math.round(priceNumber * 100) / 100;
             changePrice.value = formatterUsdCur.format(priceNumber);
@@ -242,19 +230,17 @@
     }
 
     function priceDeny(e) { // Запрещение копирования из буфера обмена.
-        resetError(changePrice.parentElement);
-        showError(changePrice.parentElement, "* Нельзя копировать из буфера обмена");
+        appConfig.resetError(changePrice);
+        appConfig.showError(changePrice, "* Нельзя копировать из буфера обмена");
         e.preventDefault();
     }
 
     function changeCheck(e) { // Проверка корректности ввода.
-        resetError(changeBtnInModal.parentElement);
         nameCheck();
         countCheck();
         priceRegain();
         priceCheck();
         if (!+appConfig.propriety) {
-            showError(changeBtnInModal.parentElement, "* Заполните поля правильно");
             e.preventDefault();
             e.stopPropagation();
         }
@@ -273,4 +259,4 @@
             editPrepare();
         }
     }
-})();
+}());

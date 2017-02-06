@@ -36,7 +36,8 @@
                                         <div class="container-fluid">
                                             <div class="row">
                                                 <div class="col-lg-6">
-                                                    <input type="text" class="form-control" id="changeName" name="changeName" placeholder="Имя товара" autofocus />
+                                                    <input type="text" class="form-control" id="changeName" name="changeName" placeholder="Имя товара" autofocus/>
+                                                    <span class="error-msg text-hide">Текст</span>
                                                 </div>
                                                 <div class="col-lg-6">
                                                     <p class="form-control-static">
@@ -57,7 +58,8 @@
                                         <div class="container-fluid">
                                             <div class="row">
                                                 <div class="col-lg-3">
-                                                    <input type="text" class="form-control" id="changeCount" name="changeCount" placeholder="Количество" />
+                                                    <input type="text" class="form-control" id="changeCount" name="changeCount" placeholder="Количество"/>
+                                                    <span class="error-msg text-hide">Текст</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -73,7 +75,8 @@
                                         <div class="container-fluid">
                                             <div class="row">
                                                 <div class="col-lg-6">
-                                                    <input type="text" class="form-control" id="changePrice" name="changePrice" placeholder="Цена товара" />
+                                                    <input type="text" class="form-control" id="changePrice" name="changePrice" placeholder="Цена товара"/>
+                                                    <span class="error-msg text-hide">Текст</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -132,20 +135,21 @@
     </div>
     <div class="container-fluid">
         <div class="row row-above-table">
-		<form name="filterAndAddForm">
-            <div class="col-lg-5">
-                <!--Значение для фильтрации-->
-                <input type="text" class="form-control input-lg" name="filterName" placeholder="Фильтр по подстроке с именем товара" value=""/>
-            </div>
-		    <div class="col-lg-2">
-		        <!--Кнопка поиска-->
-		        <button type="button" class="btn btn-default btn-lg btn-block" id="filterProduct">Search</button>
-		    </div>
-            <div class="col-lg-offset-2 col-lg-3">
-                <!--Кнопка добавления-->
-                <button type="button" class="btn btn-primary btn-lg btn-block" id="addProduct" data-toggle="modal" data-target="#changeModal" data-backdrop="static">Add New</button>
-            </div>
+        <form name="filterAndAddForm">
+        <div class="col-lg-5">
+            <!--Значение для фильтрации-->
+            <input type="text" class="form-control input-lg" name="filterName" placeholder="Фильтр по подстроке с именем товара" value=""/>
+        </div>
+		<div class="col-lg-2">
+		    <!--Кнопка поиска-->
+		    <button type="button" class="btn btn-default btn-lg btn-block" id="filterProduct">Search</button>
+		</div>
+        <div class="col-lg-offset-2 col-lg-3">
+            <!--Кнопка добавления-->
+            <button type="button" class="btn btn-primary btn-lg btn-block" id="addProduct" data-toggle="modal" data-target="#changeModal" data-backdrop="static">Add New</button>
+        </div>
         </form>
+        <span class="error-msg text-hide">Текст</span>
         </div>
     </div>
     <div>
