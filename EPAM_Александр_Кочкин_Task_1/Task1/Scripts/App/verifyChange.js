@@ -1,11 +1,9 @@
 ﻿;
 (function() {
-    var controlCharMaxNum = 32,
-        firefoxFuncBtnNum = 0,
-        nameMask = /[a-zA-Zа-яА-ЯёЁ0-9 _,;:\\\/\-\.\+\*\(\)!@#\$%&={}\[\]\"\'\?<>№]/,
-        nameWildcard = /^[a-zA-Zа-яА-ЯёЁ0-9 _,;:\\\/\-\.\+\*\(\)!@#\$%&={}\[\]\"\'\?<>№]{1,15}$/,
-        countMask = /[\d]/,
-        priceMask = /[\d\.]/,
+    var isAcceptableCountChar = /[\d]/,
+        isAcceptableCountString = /^[\d]{0,15}$/,
+        isAcceptablePriceChar = /[\d\.]/,
+        isAcceptablePriceString = /^[\d\.]{0,15}$/,
         formatterUsdCur = new Intl.NumberFormat("en-US",
         {
             style: "currency",
@@ -75,14 +73,14 @@
             nameSymbol;
 
         appConfig.resetError(changeName);
-        if (code < controlCharMaxNum ||
-			e.charCode === firefoxFuncBtnNum ||
+        if (code < appConfig.controlCharMaxNum ||
+			e.charCode === appConfig.firefoxFuncBtnNum ||
 			e.ctrlKey || e.altKey) {
             return;
         }
         nameSymbol = String.fromCharCode(code);
 
-        if (!nameMask.test(nameSymbol)) {
+        if (!appConfig.isAcceptableNameChar.test(nameSymbol)) {
             appConfig.showError(changeName, "* Введите буквы, цифры или спецсимволы");
         } else if (changeName.value.length >= 15) {
             appConfig.showError(changeName, "* Имя должно быть от 1 до 15 символов");
@@ -103,7 +101,7 @@
 
         if (emptyName) {
             appConfig.showError(changeName, "* Поле не может быть пустым или из одних пробелов");
-        } else if (!nameWildcard.test(nameText)) {
+        } else if (!appConfig.isAcceptableNameString.test(nameText)) {
             appConfig.showError(changeName, "* Должно быть от 1 до 15 букв, цифр или спецсимволов");
         } else {
             appConfig.name = nameText;
@@ -114,8 +112,15 @@
     }
 
     function nameDeny(e) { // Запрещение копирования из буфера обмена.
+        var clipboardData = e.originalEvent.clipboardData || window.clipboardData,
+            pastedData;
+        pastedData = clipboardData.getData("text");
         appConfig.resetError(changeName);
-        appConfig.showError(changeName, "* Нельзя копировать из буфера обмена");
+        if (!appConfig.isAcceptableNameString.test(pastedData)) {
+            appConfig.showError(changeName, "* Нельзя копировать из буфера обмена недопустимые символы");
+        } else {
+            return;
+        }
         e.preventDefault();
     }
 
@@ -125,14 +130,14 @@
             countSymbol;
 
         appConfig.resetError(changeCount);
-        if (code < controlCharMaxNum ||
-			e.charCode === firefoxFuncBtnNum ||
+        if (code < appConfig.controlCharMaxNum ||
+			e.charCode === appConfig.firefoxFuncBtnNum ||
 			e.ctrlKey || e.altKey) {
             return;
         }
         countSymbol = String.fromCharCode(code);
 
-        if (!countMask.test(countSymbol)) {
+        if (!isAcceptableCountChar.test(countSymbol)) {
             appConfig.showError(changeCount, "* Нужно вводить цифры");
         } else if (changeCount.value.length >= 15) {
             appConfig.showError(changeCount, "* Количество должно быть от 1 до 15 цифр");
@@ -168,8 +173,15 @@
     }
 
     function countDeny(e) { // Запрещение копирования из буфера обмена.
+        var clipboardData = e.originalEvent.clipboardData || window.clipboardData,
+            pastedData;
+        pastedData = clipboardData.getData("text");
         appConfig.resetError(changeCount);
-        appConfig.showError(changeCount, "* Нельзя копировать из буфера обмена");
+        if (!isAcceptableCountString.test(pastedData)) {
+            appConfig.showError(changeCount, "* Нельзя копировать из буфера обмена недопустимые символы");
+        } else {
+            return;
+        }
         e.preventDefault();
     }
 
@@ -179,15 +191,15 @@
             priceSymbol;
 
         appConfig.resetError(changePrice);
-        if (code < controlCharMaxNum ||
-			e.charCode === firefoxFuncBtnNum ||
+        if (code < appConfig.controlCharMaxNum ||
+			e.charCode === appConfig.firefoxFuncBtnNum ||
 			e.ctrlKey || e.altKey) {
             return;
         }
 
         priceSymbol = String.fromCharCode(code);
 
-        if (!priceMask.test(priceSymbol)) {
+        if (!isAcceptablePriceChar.test(priceSymbol)) {
             appConfig.showError(changePrice, "* Введите цифры или десятичную точку");
         } else if (changePrice.value.length >= 15) {
             appConfig.showError(changePrice, "* Цена должна содержать от 1 до 15 цифр или точку");
@@ -230,8 +242,15 @@
     }
 
     function priceDeny(e) { // Запрещение копирования из буфера обмена.
+        var clipboardData = e.originalEvent.clipboardData || window.clipboardData,
+            pastedData;
+        pastedData = clipboardData.getData("text");
         appConfig.resetError(changePrice);
-        appConfig.showError(changePrice, "* Нельзя копировать из буфера обмена");
+        if (!isAcceptablePriceString.test(pastedData)) {
+            appConfig.showError(changePrice, "* Нельзя копировать из буфера обмена недопустимые символы");
+        } else {
+            return;
+        }
         e.preventDefault();
     }
 

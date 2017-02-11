@@ -1,8 +1,5 @@
 ﻿; (function () {
-	var controlCharMaxNum = 32,
-		firefoxFuncBtnNum = 0,
-        filterMask = /[a-zA-Zа-яА-ЯёЁ0-9 _,;:\\\/\-\.\+\*\(\)!@#\$%&={}\[\]\"\'\?<>№]/,
-		btnFilterName = document.forms.filterAndAddForm.filterName;
+	var btnFilterName = document.forms.filterAndAddForm.filterName;
 
     btnFilterName.value = "";
 
@@ -19,15 +16,15 @@
             filterSymbol;
 
         appConfig.resetError(btnFilterName.parentElement.parentElement);
-        if (code < controlCharMaxNum ||
-			e.charCode === firefoxFuncBtnNum ||
+        if (code < appConfig.controlCharMaxNum ||
+			e.charCode === appConfig.firefoxFuncBtnNum ||
 			e.ctrlKey || e.altKey) {
             return;
         }
 
         filterSymbol = String.fromCharCode(code);
 
-        if (!filterMask.test(filterSymbol)) {
+        if (!appConfig.isAcceptableNameChar.test(filterSymbol)) {
             appConfig.showError(btnFilterName.parentElement.parentElement, "* Введите буквы, цифры или спецсимволы");
         } else if (btnFilterName.value.length >= 15) {
             appConfig.showError(btnFilterName.parentElement.parentElement, "* Фильтр должен быть от 1 до 15 символов");
@@ -43,9 +40,16 @@
         btnFilterName.value = filterText;
     }
 
-    function filterDeny(e) { // Запрещение копирования из буфера обмена.
+    function filterDeny(e) { // Запрещение копирования недопустимых символов.
+        var clipboardData = e.originalEvent.clipboardData || window.clipboardData,
+            pastedData;
+        pastedData = clipboardData.getData("text");
         appConfig.resetError(btnFilterName.parentElement.parentElement);
-        appConfig.showError(btnFilterName.parentElement.parentElement, "* Нельзя копировать из буфера обмена");
+        if (!appConfig.isAcceptableNameString.test(pastedData)) {
+            appConfig.showError(btnFilterName.parentElement.parentElement, "* Нельзя копировать из буфера обмена недопустимые символы");
+        } else {
+            return;
+        }
         e.preventDefault();
     }
 }());
