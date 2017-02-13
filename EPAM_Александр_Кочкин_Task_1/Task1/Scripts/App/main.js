@@ -26,10 +26,10 @@
 
     $(window).on("load", searchDb);
     $(dbBtnFilter).click(searchDb);
-    $(toggleName).click(sortingToggle);
-    $(togglePrice).click(sortingToggle);
     $(dbBtnAdd).click(addRetrieve);
     $(dbBtnInModal).click(changePlace);
+    $(toggleName).click(sortingToggle);
+    $(togglePrice).click(sortingToggle);
     $(tbodyDb).click(tbodyClick);
 
 	function drawDb(prodArray) { // Отрисовывает сведения о товарах.
@@ -83,7 +83,7 @@
 	}
 
     function appendTableRow(prod) { // Отрисовывает элемент tr - строку перечня.
-        var innerBlock = document.getElementById("rowBlock").innerHTML,
+        var innerBlock = $("#rowBlock").html(),
             trElem = document.createElement("tr");
         trElem.id = "row" + prod.id;
         $(trElem).html(innerBlock);
@@ -141,7 +141,7 @@
 	            currentId++;
 	            if (+dbBtnInModal.dataset.isUpdate) {
 	                prodStorage.splice(prodIndexInArray, 1);
-	                changeTrElem = document.getElementById("row" + dbBtnInModal.dataset.prodIdInObj);
+	                changeTrElem = $("#row" + dbBtnInModal.dataset.prodIdInObj)[0];
 	                $(changeTrElem).remove();
 	            }
 	            prodShow = prodStorage;
@@ -157,7 +157,7 @@
     }
 
     function dropPlace() { // Удаляет из хранилища объект товара.
-        var dropTrElem = document.getElementById("row" + dbBtnInModal.dataset.prodIdInObj);
+        var dropTrElem = $("#row" + dbBtnInModal.dataset.prodIdInObj)[0];
         prodStorage.splice(prodIndexInArray, 1);
         $(dropTrElem).remove();
         prodShow = prodStorage;
