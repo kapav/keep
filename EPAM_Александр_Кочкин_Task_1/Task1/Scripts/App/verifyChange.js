@@ -63,7 +63,7 @@
             resetErrorsProprietyAndFlags();
             changeName.value = appConfig.name;
             changeCount.value = appConfig.count;
-            changePrice.value = formatterUsdCur.format(+appConfig.price);
+            changePrice.value = formatterUsdCur.format(appConfig.price);
         }, 0);
     }
 
@@ -259,7 +259,7 @@
         countCheck();
         priceRegain();
         priceCheck();
-        if (!+appConfig.propriety) {
+        if (!appConfig.propriety) {
             e.preventDefault();
             e.stopPropagation();
         }
@@ -272,9 +272,9 @@
     }
 
     function tbodyClick(e) { // Обработка нажатия на кнопку редактирования.
-        var target = e.target;
+        var target = e.target.id;
 		
-        if (target.id.substring(0, 11) === "editProduct") {
+        if (target.substring(0, 11) === "editProduct") {
             editPrepare();
         }
     }

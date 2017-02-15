@@ -130,7 +130,7 @@
 	        var prodObj = {},
                 priceRound,
 	            changeTrElem;
-	        if (+appConfig.propriety) {
+	        if (appConfig.propriety) {
 	            prodObj.id = currentId;
 	            prodObj.name = appConfig.name;
 	            prodObj.count = +appConfig.count;
@@ -164,14 +164,14 @@
     }
 
     function tbodyClick(e) { // Кнопки редактирования или удаления.
-        var target = e.target;
+        var target = e.target.id;
 
-        switch (target.id.substring(0, 11)) {
+        switch (target.substring(0, 11)) {
             case "editProduct":
-                editRetrieve(target.id.substring(11));
+                editRetrieve(target.substring(11));
                 break;
             case "dropProduct":
-                dropRetrieve(target.id.substring(11));
+                dropRetrieve(target.substring(11));
                 break;
             default:
                 break;
