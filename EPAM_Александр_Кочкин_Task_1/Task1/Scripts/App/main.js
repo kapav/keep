@@ -9,6 +9,7 @@
             { id: 3, name: "Товар 3", count: 150, price: 12452.25 }
         ],
         prodShow = [],
+        trInnerBlock = $("#rowBlock").html(),
         formatterUsdCur = new Intl.NumberFormat("en-US", {
 		  style: "currency",
 		  currency: "USD"
@@ -83,7 +84,7 @@
 	}
 
     function appendTableRow(prod) { // Отрисовывает элемент tr - строку перечня.
-        var trElem = $(document.createElement("tr")).html($("#rowBlock").html())[0];
+        var trElem = $(document.createElement("tr")).html(trInnerBlock)[0];
         trElem.id = "row" + prod.id;
 
         trElem.querySelector("a.prodName").innerHTML = prod.name;
