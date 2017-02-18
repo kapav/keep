@@ -9,7 +9,7 @@
             { id: 3, name: "Товар 3", count: 150, price: 12452.25 }
         ],
         prodShow = [],
-		formatterUsdCur = new Intl.NumberFormat("en-US", {
+        formatterUsdCur = new Intl.NumberFormat("en-US", {
 		  style: "currency",
 		  currency: "USD"
 		}),
@@ -83,10 +83,8 @@
 	}
 
     function appendTableRow(prod) { // Отрисовывает элемент tr - строку перечня.
-        var innerBlock = $("#rowBlock").html(),
-            trElem = document.createElement("tr");
+        var trElem = $(document.createElement("tr")).html($("#rowBlock").html())[0];
         trElem.id = "row" + prod.id;
-        $(trElem).html(innerBlock);
 
         trElem.querySelector("a.prodName").innerHTML = prod.name;
         trElem.querySelector("span.prodCount").innerHTML = prod.count;
